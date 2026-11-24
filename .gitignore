@@ -1,0 +1,17 @@
+# local notes, not published
+context/
+
+# secrets
+.env
+.env.*
+!.env.example
+
+# generated media and receipts
+out/
+out-dryrun/
+site-dryrun/
+
+# python / os
+__pycache__/
+*.pyc
+.DS_Store

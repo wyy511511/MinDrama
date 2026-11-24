@@ -1,0 +1,125 @@
+{
+  "title": "Rain Check",
+  "logline": "Stranded at a bus stop in the rain, Mei is rescued by a stranger with a red umbrella. He tells her to bring it back next time. The next morning she finds where.",
+  "aspect_ratio": "9:16",
+  "output_size": [720, 1280],
+  "keyframe_size": [720, 1280],
+  "sheet_size": [896, 1152],
+  "image_tier": "radical_speed",
+  "seed": 20261123,
+  "style": "Cinematic film still, natural skin texture, shallow depth of field, soft film grain, teal-and-amber color grade.",
+  "avoid": "No text, no captions, no letters, no logos, no watermarks.",
+  "clip_audio": "Dialogue and ambient sound only, no music.",
+  "credits": {
+    "author": "wyy511511",
+    "repo": "https://github.com/wyy511511/microdrama"
+  },
+  "characters": {
+    "mei": {
+      "name": "Mei",
+      "look": "a woman in her late 20s, East Asian, shoulder-length straight black bob with blunt bangs, small silver hoop earrings, slim build",
+      "outfit": "a mustard-yellow hooded raincoat over a black turtleneck",
+      "voice": "a calm, low female voice with dry humor"
+    },
+    "theo": {
+      "name": "Theo",
+      "look": "a man in his early 30s, Black, close-cropped hair, short neat beard, warm brown eyes, tall",
+      "outfit": "an olive-green field jacket over a cream cable-knit sweater",
+      "voice": "a warm, relaxed baritone"
+    }
+  },
+  "props": {
+    "umbrella": {
+      "name": "The red umbrella",
+      "look": "a large red umbrella with a small white crescent-moon print and a curved wooden handle"
+    }
+  },
+  "locations": {
+    "bus_stop": {
+      "look": "a glass bus shelter on a rain-soaked city street at night, teal and magenta neon shop lights reflected in puddles, light rain, wet asphalt, empty street"
+    },
+    "cafe": {
+      "look": "a small sunlit corner cafe in the morning, wooden counter, espresso machine, potted plants, a hand-painted crescent moon and coffee cup on the window glass, warm golden light, rain-washed street outside"
+    }
+  },
+  "shots": [
+    {
+      "id": "s01", "location": "bus_stop", "characters": ["mei"], "props": [],
+      "shot": "wide", "camera": "slow push-in",
+      "frame": "Night. Mei stands alone under the glass bus shelter, no umbrella, damp hair, arms folded against the cold, rain streaming down the glass",
+      "action": "Rain hammers the shelter roof; Mei glances down the empty street and exhales, her breath visible in the cold",
+      "sound": "heavy rain on glass, distant city traffic", "duration": 6
+    },
+    {
+      "id": "s02", "location": "bus_stop", "characters": ["mei"], "props": [],
+      "shot": "close-up", "camera": "static",
+      "frame": "Close-up of Mei's face under the bus shelter, raindrops on her bangs and cheeks, teal neon light on one side of her face",
+      "action": "A raindrop falls from her bangs; she blinks it away with a tired half-smile",
+      "speaker": "mei", "line": "Of course it rains tonight.",
+      "sound": "rain on glass", "duration": 6
+    },
+    {
+      "id": "s03", "location": "bus_stop", "characters": ["mei", "theo"], "props": ["umbrella"],
+      "shot": "medium two-shot", "camera": "gentle dolly-in",
+      "frame": "Theo steps in beside Mei at the bus shelter and tilts the red umbrella over her head; Mei looks up at him, surprised",
+      "action": "Theo holds the red umbrella over Mei as she turns to look at him",
+      "speaker": "theo", "line": "You look like you're losing a fight with the sky.",
+      "sound": "rain drumming on the umbrella", "duration": 6
+    },
+    {
+      "id": "s04", "location": "bus_stop", "characters": ["mei", "theo"], "props": ["umbrella"],
+      "shot": "close-up", "camera": "static",
+      "frame": "Close-up of Mei under the red umbrella, red light glowing on her face, Theo's shoulder blurred in the foreground",
+      "action": "Mei raises an eyebrow and gives a dry little smile",
+      "speaker": "mei", "line": "I'm winning. Slowly.",
+      "sound": "rain on the umbrella", "duration": 6
+    },
+    {
+      "id": "s05", "location": "bus_stop", "characters": ["mei", "theo"], "props": ["umbrella"],
+      "shot": "medium two-shot", "camera": "slow arc around them",
+      "frame": "Mei and Theo share the red umbrella at the bus shelter, both laughing, neon reflections in the puddles at their feet",
+      "action": "They laugh together while rain glitters in the neon light",
+      "sound": "rain on the umbrella, soft laughter", "duration": 6
+    },
+    {
+      "id": "s06", "location": "bus_stop", "characters": ["mei", "theo"], "props": ["umbrella"],
+      "shot": "medium shot", "camera": "static",
+      "frame": "Bright headlights of an arriving bus flood the bus shelter; Theo presses the handle of the red umbrella into Mei's hand",
+      "action": "Theo hands Mei the umbrella and steps back into the rain",
+      "speaker": "theo", "line": "Keep it. Bring it back next time.",
+      "sound": "bus brakes hissing, rain", "duration": 6
+    },
+    {
+      "id": "s07", "location": "bus_stop", "characters": ["mei"], "props": ["umbrella"],
+      "shot": "insert close-up", "camera": "static",
+      "frame": "Close-up of Mei's hands holding the curved wooden handle of the red umbrella; a small paper tag tied to it shows a hand-drawn crescent moon and coffee cup",
+      "action": "Mei turns the paper tag over in her fingers and smiles",
+      "sound": "rain fading, bus doors closing", "duration": 6
+    },
+    {
+      "id": "s08", "location": "cafe", "characters": ["mei"], "props": ["umbrella"],
+      "shot": "wide", "camera": "slow push-in",
+      "frame": "Morning sun. Mei steps into the small corner cafe holding the folded red umbrella, the crescent moon and coffee cup painted on the window behind her",
+      "action": "Mei walks in and looks around the cafe with a hopeful smile",
+      "sound": "door bell chime, espresso machine hiss, soft morning chatter", "duration": 6
+    },
+    {
+      "id": "s09", "location": "cafe", "characters": ["theo"], "props": [],
+      "wardrobe": {"theo": "a brown barista apron over his cream cable-knit sweater"},
+      "shot": "medium shot", "camera": "static",
+      "frame": "Theo behind the wooden cafe counter steaming milk at the espresso machine, golden morning light",
+      "action": "Theo looks up from the espresso machine, surprised, and breaks into a grin",
+      "speaker": "theo", "line": "It stopped raining.",
+      "sound": "milk steamer hiss, cafe murmur", "duration": 6
+    },
+    {
+      "id": "s10", "location": "cafe", "characters": ["mei", "theo"], "props": ["umbrella"],
+      "wardrobe": {"theo": "a brown barista apron over his cream cable-knit sweater"},
+      "shot": "two-shot across the counter", "camera": "slow push-in",
+      "frame": "Mei at the cafe counter slides the folded red umbrella across to Theo, who leans on the counter facing her, sunlight between them",
+      "action": "Mei pushes the umbrella across the counter and smiles at Theo",
+      "speaker": "mei", "line": "Then I'll need a new excuse.",
+      "sound": "cafe murmur, a cup set down on a saucer", "duration": 6
+    }
+  ]
+}
