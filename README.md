@@ -61,7 +61,7 @@ the estimated spend would pass `--budget` (default $8, or `BUDGET_USD` in `.env`
 ## Cost
 
 For *The Rental Booking Paradox* (112 s of clips). Images are measured against the account balance; video is the
-price-list estimate until clips have been rendered.
+measured too, from the final pass.
 
 | Item | Cost |
 |---|---:|
@@ -70,7 +70,8 @@ price-list estimate until clips have been rendered.
 | 4 voice clips, draft (480p, Radical Value), 30 s | $0.54 measured |
 | Review rounds 1 and 2: 10 frame redraws | $0.26 measured |
 | Clips, draft (480p, Radical Value) | $2.02 estimated |
-| Clips, final (768p, Radical Speed), 21 shots, 119 s | $3.57 estimated |
+| Clips, final (768p, Radical Speed), 21 shots, 119 s | $3.57 measured |
+| **All in, reference sheets to final cut** | **$4.97 measured** |
 
 An image edit is billed on its output and every reference image together, so a shot drawn from five reference
 sheets costs several times one drawn from one.
@@ -84,8 +85,10 @@ sheets costs several times one drawn from one.
 
 - The image and video endpoints take no negative prompt and no guidance scale, so every "don't" is written into
   the prompt as a plain sentence.
-- The video endpoint takes frames only as public https URLs, so the pipeline passes the URLs the image API returns
-  (kept for 7 days) and downloads every clip as soon as it arrives.
+- The video endpoint takes frames only as public https URLs, and the image API's own URLs expire after about an
+  hour. Publish `assets/<story>/` first (this repository does) and render with
+  `--frames-base https://raw.githubusercontent.com/<you>/<repo>/main/assets/<story>`; each published file is
+  checked against the local one before it is sent. Clips are downloaded as soon as they arrive.
 - Check each model's license and the provider's terms before any commercial use; MiniMax H3 is under its own
   community license.
 - The storyboard fields (shot size, camera, line) and last-frame chaining follow

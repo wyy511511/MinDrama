@@ -657,6 +657,7 @@ class Film:
     def __init__(self, story: dict, provider, ledger: Ledger, manifest: Manifest, workers: int):
         self.story, self.p, self.ledger, self.m, self.workers = story, provider, ledger, manifest, workers
         self.shots = {s["id"]: s for s in story["shots"]}
+        self.frames_base = ""   # set from --frames-base
 
     def call(self, step: str, item: str, model: str, tier: str, est: float, fn, params: dict, pass_=None) -> dict:
         """One API call, with its receipt."""
@@ -840,6 +841,25 @@ class Film:
         self.m.put("keyframes", f"{sid}@{pass_}", entry)
         return entry
 
+    def frame_url(self, entry: dict) -> str:
+        """Where the video endpoint reads a frame from. The image API's URLs are signed and answer 403 after about an
+        hour, and the video endpoint then fails with a bare engine_error (final pass, 23 Nov: 17 of 21 clips). With
+        frames_base set, frames are read from where the assets are published instead, after checking that the
+        published file is the same size as the local one."""
+        if not self.frames_base or self.p.dry:
+            return entry["url"]
+        url = f"{self.frames_base}/{entry['file']}"
+        local = (OUT / entry["file"]).stat().st_size
+        req = urllib.request.Request(url, headers={"User-Agent": UA, "Range": "bytes=0-0"})
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                total = int((r.headers.get("Content-Range") or "/0").rsplit("/", 1)[-1] or 0)
+        except urllib.error.HTTPError as e:
+            raise RuntimeError(f"{url} answered {e.code}: publish the assets before rendering") from None
+        if total != local:
+            raise RuntimeError(f"{url} is {total} bytes, the local frame {local}: publish the current assets first")
+        return url
+
     def clip(self, pass_: str, sid: str, first: dict | None) -> None:
         if not first or not first.get("url"):
             raise RuntimeError(f"{sid} has no first frame with a URL (run: keyframes)")
@@ -848,13 +868,16 @@ class Film:
         shot = self.shots[sid]
         prompt = clip_prompt(self.story, shot, bool(last))
         dur = float(shot.get("duration", 6))
+        first_url = self.frame_url(first)
+        last_url = self.frame_url(last) if last else None
         attempt = self._attempt("clips", sid, pass_)
         seed = seed_for(self.story, f"clip:{sid}", attempt)
         est = VIDEO_PER_S[(cfg["tier"], cfg["short_edge"])] * dur
         res = self.call("clip", sid, VIDEO_MODEL, cfg["tier"], est,
-                        lambda: self.p.video(prompt, first["url"], last["url"] if last else None, dur,
+                        lambda: self.p.video(prompt, first_url, last_url, dur,
                                              cfg["short_edge"], self.story["aspect_ratio"], cfg["tier"], seed),
-                        {"duration": dur, "short_edge": cfg["short_edge"], "seed": seed, "last_frame": bool(last)},
+                        {"duration": dur, "short_edge": cfg["short_edge"], "seed": seed, "last_frame": bool(last),
+                         "frames_from": "published" if self.frames_base else "image API"},
                         pass_=pass_)
         path = fetch(res["output"], OUT / "clips" / pass_ / sid)
         self.m.put("clips", sid, {"file": rel(path), "url": res["output"].get("url"), "seed": seed, "attempt": attempt,
@@ -1120,6 +1143,9 @@ def main(argv=None) -> int:
     ap.add_argument("--workers", type=int, default=4, help="requests at a time (the free tier allows 5)")
     ap.add_argument("--music", type=Path, help="an audio file to lay under the film at low volume")
     ap.add_argument("--dry-run", action="store_true", help="placeholder media, no API key, no cost")
+    ap.add_argument("--frames-base", default=os.environ.get("FRAMES_BASE_URL", ""),
+                    help="read frames for clips from where assets/<story>/ is published, e.g. a raw GitHub URL "
+                         "(the image API's own URLs expire after about an hour)")
     a = ap.parse_args(argv)
 
     story = json.loads(a.story.read_text(encoding="utf-8"))
@@ -1151,6 +1177,7 @@ def main(argv=None) -> int:
         return 2
     ledger = Ledger(OUT / "receipts.jsonl", a.budget)
     film = Film(story, provider, ledger, man, a.workers)
+    film.frames_base = a.frames_base.rstrip("/")
     ids = [s for s in a.shots.split(",") if s] or [s["id"] for s in story["shots"]]
     unknown = [s for s in ids if s not in film.shots]
     if unknown:
@@ -1197,10 +1224,10 @@ def main(argv=None) -> int:
             def ok_clips() -> int:
                 return sum(1 for r in ledger.rows() if r["step"] == "clip" and r.get("pass") == a.pass_
                            and r.get("status") == "ok")
-            before = ok_clips()
+            clips_before = ok_clips()   # not "before": that name holds the balance read at the start (bug, 23 Nov)
             failed = film.refs(set()) or film.keyframes(ids, False) or film.clips(a.pass_, ids, redo_shots)
             run_row["render_seconds"] = round(time.time() - t0, 1)
-            run_row["clips_rendered"] = ok_clips() - before
+            run_row["clips_rendered"] = ok_clips() - clips_before
             film.m.data["runs"].append(run_row)
             film.m.save()
             if failed:
