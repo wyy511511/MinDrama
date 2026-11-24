@@ -19,8 +19,8 @@ renders these four again, about $0.31 more than planned. `voices --pass final` w
 **Speed.** 64 s for the four, four at a time. Per call: 11.7 s for a 4.5 s clip, 38 s for 9.4 s, 62.7 s for 13.7 s.
 Clips come back 864×480 at 24 fps, a little longer than asked (4.46 s for 4, 9.42 for 9, 13.67 for 13).
 
-**Cost.** $0.31 by the account balance ($5.400 → $5.094), against $0.54 from the price list: about $0.01 per
-second at 480p on Radical Value.
+**Cost.** $0.54 by the account balance ($5.400 → $4.860), exactly the price list. (This note first said $0.31:
+the balance had been read before every charge had posted.)
 
 **What could be checked without ears.** Every clip has sound, and the speech sits where the line should:
 
@@ -65,7 +65,7 @@ e1s11 司机。模型是 MiniMax H3 Fast（`nunchux-minimax-h3-fast-fl2va`），
 **速度。** 4 路并发，4 段共 64 秒。单次调用：4.5 秒的片段 11.7 秒，9.4 秒的 38 秒，13.7 秒的 62.7 秒。
 返回的是 864×480、24 帧，时长比要求的略长（要 4 秒给 4.46，要 9 给 9.42，要 13 给 13.67）。
 
-**花费。** 按账户余额实际 $0.31（$5.400 → $5.094），价格页估算是 $0.54：480p 便宜档实际约每秒 $0.01。
+**花费。** 按账户余额实际 $0.54（$5.400 → $4.860），和价格页一致。（这份笔记最初写的是 $0.31：当时查余额太早，扣费还没全部入账。）
 
 **不靠耳朵能检查的。** 每段都有声音，说话的位置和台词对得上：
 

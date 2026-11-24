@@ -203,7 +203,8 @@
           "verbatim": "去掉多余的女的，你自查出来了 记得有个表格写上你自查与否",
           "fix": "action: he is alone, the customer off-screen; every clip prompt: only the people already in Image 1",
           "status": "re-renders in the final pass",
-          "post_fixable": false
+          "post_fixable": false,
+          "note": "Remove the extra woman. You caught this one yourself; the table has to say whether each issue was self-detected."
         }
       ]
     },
@@ -237,7 +238,8 @@
           "verbatim": "这个的draft clip最后有诡异的微笑 但可以剪辑避免",
           "fix": "none now; trim the end in post if it recurs",
           "post_fixable": true,
-          "status": "post-production"
+          "status": "post-production",
+          "note": "The draft clip ends with an odd smile, but that can be cut in the edit."
         }
       ]
     },
@@ -297,7 +299,8 @@
           "verbatim": "这个改台词 upgrade me or downgrade to whatever available cars you have. 之类的讲清楚因为说没车就要问别的option",
           "fix": "line rewritten; 4 s → 5 s",
           "status": "renders in the final pass",
-          "post_fixable": false
+          "post_fixable": false,
+          "note": "Change the line to something like 'upgrade me, or downgrade me to whatever cars you have'. Make it clear: with no cars left, she has to ask for any other option."
         }
       ]
     },
@@ -328,7 +331,8 @@
           "verbatim": "这里可能需要把both are gone改 抱歉都不可行都没了",
           "fix": "line rewritten; 6 s → 7 s",
           "status": "renders in the final pass",
-          "post_fixable": false
+          "post_fixable": false,
+          "note": "Change 'Both are gone' to: sorry, neither is possible, they're all gone."
         }
       ]
     },
@@ -367,7 +371,8 @@
           "verbatim": "这个的话得重新生成图 就是其他平台 红色的 黑色里绿色的 蓝色的 都No cars 。更仔细的手机屏幕截图。 只拍放大后的手就行。",
           "fix": "first frame redrawn: tight insert of hand and phone, three coloured app cards each reading NO CARS",
           "status": "image redrawn in v1",
-          "post_fixable": false
+          "post_fixable": false,
+          "note": "Regenerate the image: the other platforms, red, black with green and blue, all showing NO CARS. A more detailed phone screen. Just the zoomed-in hand."
         }
       ]
     },
@@ -397,7 +402,8 @@
           "verbatim": "然后再多一个手机屏幕截图 类似uber的branding的屏幕选 driver 和 tier （priority pickup, etc之类的和价格 ）看出来在打车",
           "fix": "new shot after e1s08; a fictional RIDE app in black and white, no real brand",
           "status": "new image drawn in v1",
-          "post_fixable": false
+          "post_fixable": false,
+          "note": "Add another phone screen with Uber-like branding, choosing a driver and a tier (Priority Pickup and so on, with prices), so it reads as hailing a ride."
         },
         {
           "round": 1,
@@ -424,9 +430,9 @@
       "shot": "wide establishing shot",
       "camera": "static",
       "duration": 5,
-      "frame": "Wide shot of the sunny airport pickup curb: Traveler stands at the edge of the sidewalk on the right, filling about half the frame height, the teal suitcase beside her, phone in hand, looking down the pickup lane to the left; the lane is empty, with no car anywhere in sight",
-      "last_frame": "Change only the lane: a small yellow sedan has now pulled up and stopped in the pickup lane right in front of Traveler, its driver-side door with the H badge facing her",
-      "action": "Traveler waits at the curb, looking down the empty lane; the yellow H sedan drives in from the left, slows down and stops right in front of her, its driver-side door with the H badge facing her",
+      "frame": "Wide shot from shoulder height on the sidewalk, angled toward the pickup lane: the raised light-concrete sidewalk with its curb edge runs along the right of the frame; Traveler stands on the sidewalk right at the curb edge, filling about half the frame height, her right hand on the handle of the teal suitcase standing right beside her, phone in her left hand, looking left down the asphalt pickup lane; the lane runs from the left background along the curb toward the camera and is completely empty, no car anywhere in sight; palms in square planters on the sidewalk behind her. Exactly one person in the whole frame: Traveler, alone",
+      "last_frame": "Change only the lane: the small yellow sedan has driven in along the asphalt pickup lane and stopped right in front of Traveler, alongside the curb, all four wheels on the asphalt below the curb edge, nose pointing toward the right, its side with the H badge on the front door facing her; nothing on the sidewalk changes and no part of the car is on the sidewalk",
+      "action": "Traveler waits on the sidewalk at the curb, looking down the empty lane; the yellow H sedan drives in along the asphalt lane from the left background, slows down and stops alongside the curb right in front of her",
       "sound": "airport curb traffic, a distant horn, tires slowing to a stop",
       "text": "the H badge on the car door; the license plates stay blank",
       "last_refs": [
@@ -442,7 +448,31 @@
           "verbatim": "这个去掉背景里的车 她在等车来 你这个空间对应关系不对。（一定要在我的manul表格里说）",
           "fix": "first frame with an empty lane; the sedan arrives in the clip; the last frame is drawn with the sedan sheet as a reference",
           "status": "image and last frame redrawn in v1",
-          "post_fixable": false
+          "post_fixable": false,
+          "note": "Remove the car in the background: she is waiting for the car to come, so the spatial relationship is wrong. (This must be in my manual table.)"
+        },
+        {
+          "round": 2,
+          "by": "human",
+          "step": "review v2",
+          "manual": true,
+          "self_caught": false,
+          "issue": "the car in the v1 last frame was still not on the road: in the v1 first frame Traveler stood on the asphalt lane with the sidewalk behind her, so the car could only stop on the sidewalk",
+          "verbatim": "这个的last frame 车还是没在路上 还是错的。",
+          "note": "The car in the last frame still isn't on the road. Still wrong.",
+          "fix": "both frames redrawn with the original blocking: camera on the sidewalk at shoulder height facing the lane; Traveler on the sidewalk at the curb; the car arrives along the asphalt lane and stops alongside the curb, all wheels on the asphalt",
+          "post_fixable": false,
+          "status": "first and last frame redrawn in v2"
+        },
+        {
+          "round": 2,
+          "by": "self",
+          "step": "review v2",
+          "self_caught": true,
+          "issue": "the first v2 draw had two Travelers: one at the curb and a copy with the suitcase behind her, carried into the last frame",
+          "fix": "exactly one person in the frame, her hand on the suitcase handle beside her; both frames redrawn",
+          "post_fixable": false,
+          "status": "first and last frame redrawn in v2 (attempt 3)"
         }
       ]
     },
@@ -534,7 +564,8 @@
           "verbatim": "13 14换位置",
           "fix": "moved before e1s13",
           "status": "reordered in v1",
-          "post_fixable": false
+          "post_fixable": false,
+          "note": "Swap 13 and 14."
         }
       ]
     },
@@ -583,7 +614,8 @@
           "verbatim": "这个得换位置 放到e1s14 … 这个之后 也就是13 14换位置",
           "fix": "moved after e1s14",
           "status": "reordered in v1",
-          "post_fixable": false
+          "post_fixable": false,
+          "note": "Move this after e1s14, i.e. swap 13 and 14."
         }
       ]
     },
@@ -616,7 +648,8 @@
           "verbatim": "这个要手机特写和女的的声音 oh true, H sell lots of car on H car for sale.",
           "fix": "tight phone close-up of an H Car Sales page; Traveler says the line; 4 s → 5 s",
           "status": "image redrawn in v1; line renders in the final pass",
-          "post_fixable": false
+          "post_fixable": false,
+          "note": "This needs a phone close-up and the woman's voice: 'Oh true, H sells lots of cars on H Car Sales.'"
         },
         {
           "round": 1,
@@ -710,7 +743,8 @@
           "verbatim": "这个场景的图片司机背后没有椅子 但是可以通过剪裁遮盖所以还好",
           "fix": "none now; crop in post",
           "post_fixable": true,
-          "status": "post-production"
+          "status": "post-production",
+          "note": "There is no seat behind the driver in this image, but cropping can hide it, so it's fine."
         }
       ]
     },
@@ -732,5 +766,5 @@
       "sound": "waves and sea wind, a distant tire hum"
     }
   ],
-  "version": "v1 · human feedback round 1"
+  "version": "v2 · review round 2"
 }

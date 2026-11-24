@@ -67,9 +67,10 @@ price-list estimate until clips have been rendered.
 |---|---:|
 | 9 reference sheets, 13 generations with re-rolls | $0.022 measured |
 | 20 first frames and 2 last frames, 27 generations with re-rolls | $0.58 measured |
-| 4 voice clips, draft (480p, Radical Value), 30 s | $0.31 measured |
+| 4 voice clips, draft (480p, Radical Value), 30 s | $0.54 measured |
+| Review rounds 1 and 2: 10 frame redraws | $0.26 measured |
 | Clips, draft (480p, Radical Value) | $2.02 estimated |
-| Clips, final (768p, Radical Speed) | $3.36 estimated |
+| Clips, final (768p, Radical Speed), 21 shots, 119 s | $3.57 estimated |
 
 An image edit is billed on its output and every reference image together, so a shot drawn from five reference
 sheets costs several times one drawn from one.
