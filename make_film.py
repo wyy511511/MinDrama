@@ -60,9 +60,12 @@ PASSES = {
     "final": {"tier": "radical_speed", "short_edge": 768},
 }
 CLIP_SECONDS = (4, 15)        # what MiniMax H3 Fast accepts per call
-# Estimates from nunchux.ai/pricing, read 2026-11-23: $ per megapixel (images) and $ per output second (video).
-# Text-to-image Klein is assumed to cost what Klein Edit costs. Check the live page; receipts call these estimates.
-IMAGE_PER_MP = {"radical_speed": 0.006, "radical_value": 0.004}
+# Estimates, $ per megapixel (images) and $ per output second (video). Video: nunchux.ai/pricing, read 2026-11-23.
+# Images: calibrated against the account balance on 2026-11-23. Text to image cost about $0.0014 per output MP;
+# an edit is billed on the output and every reference image together, about $0.006 per MP on Radical Speed
+# (Radical Value figures are scaled from the price list). Receipts call these estimates; the balance is the truth.
+T2I_PER_MP = {"radical_speed": 0.0014, "radical_value": 0.001}
+EDIT_PER_MP = {"radical_speed": 0.006, "radical_value": 0.004}
 VIDEO_PER_S = {("radical_speed", 480): 0.022, ("radical_speed", 768): 0.030,
                ("radical_value", 480): 0.018, ("radical_value", 768): 0.024}
 FONTS = {
@@ -589,6 +592,21 @@ def clip_prompt(story: dict, shot: dict, has_last: bool) -> str:
     return " ".join(parts)
 
 
+def t2i_cost(w: int, h: int, tier: str) -> float:
+    return w * h / 1e6 * T2I_PER_MP[tier]
+
+
+def ref_pixels(story: dict, key: str) -> int:
+    w, h = sizes(story)[key.split(":")[0]]
+    return w * h
+
+
+def edit_cost(story: dict, w: int, h: int, tier: str, ref_keys: list[str], extra_inputs: int = 0) -> float:
+    """Output plus every input image, billed by the megapixel. extra_inputs: further inputs of the frame's own size."""
+    pixels = w * h * (1 + extra_inputs) + sum(ref_pixels(story, k) for k in ref_keys)
+    return pixels / 1e6 * EDIT_PER_MP[tier]
+
+
 def check_story(story: dict) -> list[str]:
     """Problems that would fail a call or confuse the models, found before any money is spent."""
     out = []
@@ -658,7 +676,10 @@ class Film:
 
     @staticmethod
     def image_cost(w: int, h: int, tier: str) -> float:
-        return w * h / 1e6 * IMAGE_PER_MP[tier]
+        return t2i_cost(w, h, tier)
+
+    def edit_cost(self, w: int, h: int, tier: str, ref_keys: list[str], extra_inputs: int = 0) -> float:
+        return edit_cost(self.story, w, h, tier, ref_keys, extra_inputs)
 
     def _attempt(self, section: str, key: str, pass_=None) -> int:
         """The next attempt number. The files of the previous attempt are kept beside it as name.aN.ext,
@@ -718,7 +739,7 @@ class Film:
                 images = [data_uri(OUT / self.m.get("refs", k)["jpg"]) for k in shot_refs(self.story, shot)]
                 attempt = self._attempt("keyframes", sid)
                 seed = seed_for(self.story, f"keyframe:{sid}", attempt)
-                res = self.call("keyframe", sid, EDIT_MODEL, tier, self.image_cost(w, h, tier),
+                res = self.call("keyframe", sid, EDIT_MODEL, tier, self.edit_cost(w, h, tier, shot_refs(self.story, shot)),
                                 lambda: self.p.edit(prompt, images, w, h, tier, seed),
                                 {"width": w, "height": h, "seed": seed, "refs": shot_refs(self.story, shot)})
                 path = fetch(res["output"], OUT / "keyframes" / sid)
@@ -732,7 +753,7 @@ class Film:
                 prompt = last_frame_prompt(self.story, shot)
                 attempt = self._attempt("keyframes", f"{sid}:last")
                 seed = seed_for(self.story, f"keyframe:{sid}:last", attempt)
-                res = self.call("lastframe", sid, EDIT_MODEL, tier, self.image_cost(w, h, tier),
+                res = self.call("lastframe", sid, EDIT_MODEL, tier, self.edit_cost(w, h, tier, [], extra_inputs=1),
                                 lambda: self.p.edit(prompt, [data_uri(first)], w, h, tier, seed),
                                 {"width": w, "height": h, "seed": seed, "from": sid})
                 path = fetch(res["output"], OUT / "keyframes" / f"{sid}-last")
@@ -786,7 +807,9 @@ class Film:
                                      for k in shot_refs(self.story, shot) if k.startswith("character:")]
         seed = seed_for(self.story, f"chain:{sid}", 0)
         prompt = chain_prompt(self.story, shot)
-        res = self.call("chain", sid, EDIT_MODEL, tier, self.image_cost(w, h, tier),
+        res = self.call("chain", sid, EDIT_MODEL, tier,
+                        self.edit_cost(w, h, tier, [k for k in shot_refs(self.story, shot) if k.startswith("character:")],
+                                       extra_inputs=1),
                         lambda: self.p.edit(prompt, images, w, h, tier, seed),
                         {"width": w, "height": h, "seed": seed, "from": prev_id}, pass_=pass_)
         path = fetch(res["output"], OUT / "keyframes" / f"{sid}-chain-{pass_}")
@@ -955,10 +978,11 @@ def plan(story: dict, budget: float) -> int:
     sz = sizes(story)
     tier = story["image_tier"]
     refs = ref_items(story)
-    ref_cost = sum(w * h / 1e6 * IMAGE_PER_MP[tier] for _, _, _, (w, h) in refs)
+    ref_cost = sum(t2i_cost(w, h, tier) for _, _, _, (w, h) in refs)
     n_last = sum(1 for s in story["shots"] if s.get("last_frame"))
     kw, kh = sz["keyframe"]
-    kf_cost = (len(story["shots"]) + n_last) * kw * kh / 1e6 * IMAGE_PER_MP[tier]
+    kf_cost = (sum(edit_cost(story, kw, kh, tier, shot_refs(story, s)) for s in story["shots"])
+               + n_last * edit_cost(story, kw, kh, tier, [], extra_inputs=1))
     secs = sum(float(s.get("duration", 6)) for s in story["shots"])
     print(f"{story['title']}: {len(story['shots'])} shots, {secs:.0f} s of clips, {story['aspect_ratio']}\n")
     for s in story["shots"]:

@@ -60,14 +60,18 @@ the estimated spend would pass `--budget` (default $8, or `BUDGET_USD` in `.env`
 
 ## Cost
 
-Estimated from the public price list on 23 Nov 2026, for *The Rental Booking Paradox* (112 s of clips):
+For *The Rental Booking Paradox* (112 s of clips). Images are measured against the account balance; video is the
+price-list estimate until clips have been rendered.
 
-| Item | Estimate |
+| Item | Cost |
 |---|---:|
-| 9 reference sheets | $0.06 |
-| 20 first frames + 2 last frames | $0.12 |
-| Clips, draft (480p, Radical Value) | $2.02 |
-| Clips, final (768p, Radical Speed) | $3.36 |
+| 9 reference sheets, 13 generations with re-rolls | $0.022 measured |
+| 20 first frames and 2 last frames, 27 generations with re-rolls | $0.58 measured |
+| Clips, draft (480p, Radical Value) | $2.02 estimated |
+| Clips, final (768p, Radical Speed) | $3.36 estimated |
+
+An image edit is billed on its output and every reference image together, so a shot drawn from five reference
+sheets costs several times one drawn from one.
 
 ## Deploy the making-of page
 
@@ -84,6 +88,12 @@ Estimated from the public price list on 23 Nov 2026, for *The Rental Booking Par
   community license.
 - The storyboard fields (shot size, camera, line) and last-frame chaining follow
   [LocalMiniDrama](https://github.com/xuanyustudio/LocalMiniDrama) (MIT).
+
+## Production notes
+
+[notes/](notes/README.md), in English and Chinese: what each step showed, what was re-rolled and why, with the
+contact sheets, and [a follow-up question](notes/followup-how-models-were-chosen.md) the author asked after step 2:
+how were the models chosen, and what did that leave untested?
 
 ## License
 

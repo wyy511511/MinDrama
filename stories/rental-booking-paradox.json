@@ -185,7 +185,7 @@
       "shot": "insert close-up",
       "camera": "static",
       "duration": 4,
-      "frame": "Insert close-up of the black thin-bezel monitor at the right end of the yellow counter, Clerk's hand resting on its edge; the screen shows one large number 3",
+      "frame": "Tight insert close-up: the screen of the black thin-bezel monitor at the right end of the yellow counter fills most of the frame, Clerk's hand in a navy sleeve resting on its edge at the right; the screen shows one large number 3; only a sliver of the yellow counter below; no sign, wall or lettering in view",
       "last_frame": "Change only the monitor: it is now turned further toward the left and its screen shows one large number 0",
       "action": "Clerk's hand turns the monitor toward Traveler on the left; the large number on the screen drops from 3 to 0, in one smooth move",
       "sound": "the soft creak of the monitor stand turning",
@@ -243,7 +243,7 @@
       "shot": "insert close-up",
       "camera": "static",
       "duration": 4,
-      "frame": "Insert close-up of Traveler's hand holding her phone above the yellow counter; the screen shows a row of rental app tiles, each reading NO CARS, and a near-black square icon with a white car symbol labeled RIDE",
+      "frame": "Insert close-up of Traveler's hand holding her phone above the yellow counter; the screen shows a short list of rental app tiles, each reading NO CARS, and at the bottom of the screen one large near-black square app icon with a white car symbol and the word RIDE under it",
       "action": "Her thumb swipes across the row of rival rental apps, each showing NO CARS, pauses for a beat, then taps the near-black RIDE icon, at normal speed",
       "sound": "soft taps of a thumb on the phone screen, the rental hall murmur",
       "text": "NO CARS on the app tiles and RIDE under the dark icon"
@@ -343,10 +343,10 @@
       "shot": "insert close-up",
       "camera": "static",
       "duration": 4,
-      "frame": "Insert close-up of the yellow sedan's dashboard behind the steering wheel, Driver's fingers resting near the odometer, which clearly reads 70,000",
+      "frame": "Insert close-up of the yellow sedan's instrument cluster, seen through the open upper gap of the steering wheel: a digital odometer display in the center of the cluster shows 70,000 in large, clear white digits, fully visible and not covered by the wheel rim; Driver's fingertips rest on the dashboard beside it; the steering wheel hub is plain, with no emblem or lettering",
       "action": "Driver's fingers tap the dashboard twice; the odometer clearly reads 70,000, at normal speed",
       "sound": "two light taps on the dashboard",
-      "text": "70,000 on the odometer"
+      "text": "70,000 on the odometer display, and nothing else"
     },
     {
       "id": "e1s14",
