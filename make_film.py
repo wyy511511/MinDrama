@@ -556,8 +556,20 @@ def keyframe_prompt(story: dict, shot: dict) -> str:
     return " ".join(parts)
 
 
+def last_refs(shot: dict) -> list[str]:
+    """Reference sheets the last frame needs beyond the first frame: something that only appears by the end
+    (e1s09: the sedan pulls up into a lane that was empty in the first frame)."""
+    return list(shot.get("last_refs", []))[:9]
+
+
 def last_frame_prompt(story: dict, shot: dict) -> str:
-    return (f"Image 1 is the first frame of this shot. {shot['last_frame'].rstrip('.')}. Keep the people, faces, "
+    named = ""
+    for i, key in enumerate(last_refs(shot), 2):
+        kind, name = key.split(":")
+        label = (story["characters"][name]["name"] if kind == "character" else
+                 story["props"][name]["name"] if kind == "prop" else story["locations"][name].get("name", name))
+        named += f" {label} looks exactly like Image {i}."
+    return (f"Image 1 is the first frame of this shot. {shot['last_frame'].rstrip('.')}.{named} Keep the people, faces, "
             f"outfits, positions, light and framing identical. "
             + (f"The only readable text: {shot['text']}. " if shot.get("text") else "") + story["avoid"])
 
@@ -632,6 +644,11 @@ def check_story(story: dict) -> list[str]:
             out.append(f"{s['id']}: the line has no known speaker")
         if len(shot_refs(story, s)) > 10:
             out.append(f"{s['id']}: more than 10 reference images")
+        for k in last_refs(s):
+            kind, name = k.split(":") if ":" in k else ("", k)
+            pool = {"character": chars, "prop": props, "location": locs}.get(kind, {})
+            if name not in pool:
+                out.append(f"{s['id']}: unknown last-frame reference {k}")
     return out
 
 
@@ -755,9 +772,11 @@ class Film:
                 prompt = last_frame_prompt(self.story, shot)
                 attempt = self._attempt("keyframes", f"{sid}:last")
                 seed = seed_for(self.story, f"keyframe:{sid}:last", attempt)
-                res = self.call("lastframe", sid, EDIT_MODEL, tier, self.edit_cost(w, h, tier, [], extra_inputs=1),
-                                lambda: self.p.edit(prompt, [data_uri(first)], w, h, tier, seed),
-                                {"width": w, "height": h, "seed": seed, "from": sid})
+                images = [data_uri(first)] + [data_uri(OUT / self.m.get("refs", k)["jpg"]) for k in last_refs(shot)]
+                res = self.call("lastframe", sid, EDIT_MODEL, tier,
+                                self.edit_cost(w, h, tier, last_refs(shot), extra_inputs=1),
+                                lambda: self.p.edit(prompt, images, w, h, tier, seed),
+                                {"width": w, "height": h, "seed": seed, "from": sid, "refs": last_refs(shot)})
                 path = fetch(res["output"], OUT / "keyframes" / f"{sid}-last")
                 jpg = to_jpeg(path)
                 self.m.put("keyframes", f"{sid}:last", {"file": rel(path), "jpg": rel(jpg),
@@ -1027,7 +1046,8 @@ def requests_preview(story: dict, man: Manifest, pass_: str) -> Path:
                                         seed_for(story, f"keyframe:{s['id']}", 0))})
         if s.get("last_frame"):
             calls.append({"step": "lastframe", "item": s["id"], "POST": f"{API}/v1/images/edits",
-                          "body": edit_body(last_frame_prompt(story, s), [f"<data URI of keyframes/{s['id']}.jpg>"],
+                          "body": edit_body(last_frame_prompt(story, s), [f"<data URI of keyframes/{s['id']}.jpg>"]
+                                            + [f"<data URI of refs/{k.replace(':', '-')}.jpg>" for k in last_refs(s)],
                                             w, h, tier, seed_for(story, f"keyframe:{s['id']}:last", 0))})
     for s in story["shots"]:
         calls.append({"step": "clip", "item": s["id"], "POST": f"{API}/v1/videos/generations",

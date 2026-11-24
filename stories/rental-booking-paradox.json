@@ -39,7 +39,18 @@
       "look": "Woman, mid-twenties (she looks about 25, with a youthful face), mixed-heritage American, about 165 cm, slim light athletic build. Oval face with a softly pointed chin, high rounded cheekbones, almond eyes set slightly wide, straight nose with a small rounded tip, full lower lip, straight medium-thick brows. Dark brown-black straight shoulder-length bob, deep side part on the left, front strands tucked behind the right ear. Dark brown eyes. Warm tan skin, a small mole under the left eye; light natural makeup, natural lip color. No glasses, no bangs, no earrings, no jewelry, no tattoos, no hat.",
       "outfit": "a coral-orange lightweight hip-length zip jacket with two side slit pockets, worn open over a plain cream crew-neck T-shirt; dark navy straight-leg trousers; dark charcoal low sneakers",
       "voice": "a clear voice of a woman in her mid-twenties, slightly husky after a long flight",
-      "pose": "one hand lightly in a jacket side pocket with the thumb out"
+      "pose": "one hand lightly in a jacket side pocket with the thumb out",
+      "review": [
+        {
+          "round": 0,
+          "by": "self",
+          "step": "1",
+          "issue": "looked 35 or older; the brief says mid-twenties",
+          "fix": "re-described: looks about 25, youthful face; re-rolled",
+          "status": "done (attempt 1)",
+          "post_fixable": false
+        }
+      ]
     },
     "clerk": {
       "name": "Clerk",
@@ -65,7 +76,27 @@
     "sedan": {
       "name": "The yellow H sedan",
       "look": "A contemporary compact four-door sedan with a low roofline, not an SUV. Warm golden-yellow paint; the roof is sun-faded to a noticeably paler, chalky yellow, clearly visible in the three-quarter view. The same three-box four-door sedan body with a separate trunk in all three panels, never a hatchback. A smooth plain front grille and a plain trunk lid with no emblem, badge or lettering. Blue-grey tinted windows, dark grey alloy wheels, clear headlights, coral-red taillights, blank license plates with no characters, no roof rack, no taxi sign",
-      "marks": "one small square H badge (a yellow square with a dark capital H) on the driver-side front door, and nothing else"
+      "marks": "one small square H badge (a yellow square with a dark capital H) on the driver-side front door, and nothing else",
+      "review": [
+        {
+          "round": 0,
+          "by": "self",
+          "step": "1",
+          "issue": "a Hyundai-like emblem on the grille; no faded roof",
+          "fix": "plain grille and trunk lid, faded roof visible; re-rolled",
+          "status": "done (attempt 1)",
+          "post_fixable": false
+        },
+        {
+          "round": 0,
+          "by": "self",
+          "step": "1",
+          "issue": "the three-quarter view turned into a hatchback",
+          "fix": "the same three-box sedan in all three panels; re-rolled",
+          "status": "done (attempt 2)",
+          "post_fixable": false
+        }
+      ]
     },
     "phone": {
       "name": "Her phone",
@@ -85,7 +116,18 @@
     "curb": {
       "name": "Airport Curb",
       "look": "The arrivals-level pickup curb of a 2020s Los Angeles airport: a wide light concrete sidewalk with the rental center's glass entrance doors behind, with no signs or lettering above them; on the left a row of three tall palm trees in square concrete planters along the curb; on the right two square grey concrete columns holding up the elevated roadway above, shading the right half; in the foreground an empty asphalt pickup lane with white curb markings; no traffic cones, no luggage, no other vehicles",
-      "light": "Afternoon: hard warm-white California sun from the upper left, crisp palm shadows on the sidewalk, cooler blue shade under the elevated road on the right."
+      "light": "Afternoon: hard warm-white California sun from the upper left, crisp palm shadows on the sidewalk, cooler blue shade under the elevated road on the right.",
+      "review": [
+        {
+          "round": 0,
+          "by": "self",
+          "step": "1",
+          "issue": "garbled lettering above the entrance",
+          "fix": "no signs or lettering above the doors; re-rolled",
+          "status": "done (attempt 1)",
+          "post_fixable": false
+        }
+      ]
     },
     "highway": {
       "name": "California Coastal Highway",
@@ -151,7 +193,19 @@
       "line": "Sorry. We have no cars.",
       "delivery": "calm",
       "sound": "the rental hall murmur",
-      "text": "the H on the sign behind him"
+      "text": "the H on the sign behind him",
+      "review": [
+        {
+          "round": 0,
+          "by": "self",
+          "step": "3",
+          "issue": "an unknown woman (light blue shirt, long wavy hair) walked into the Clerk's close-up in the draft clip",
+          "verbatim": "去掉多余的女的，你自查出来了 记得有个表格写上你自查与否",
+          "fix": "action: he is alone, the customer off-screen; every clip prompt: only the people already in Image 1",
+          "status": "re-renders in the final pass",
+          "post_fixable": false
+        }
+      ]
     },
     {
       "id": "e1s04",
@@ -172,7 +226,20 @@
       "speaker": "narrator",
       "line": "Rental companies plan around expected returns, not a specific car waiting for you. One late return, one car in the shop, one at the wrong branch—and three expected cars become zero.",
       "sound": "the rental hall murmur, the light tap of the phone on the counter, a soft knock as Clerk's hand settles on the monitor edge",
-      "text": "the H on the sign"
+      "text": "the H on the sign",
+      "post": "If the odd smile at the end recurs in the final clip, trim the last second in post.",
+      "review": [
+        {
+          "round": 1,
+          "by": "human",
+          "step": "review v1",
+          "issue": "an odd smile at the very end of the draft clip",
+          "verbatim": "这个的draft clip最后有诡异的微笑 但可以剪辑避免",
+          "fix": "none now; trim the end in post if it recurs",
+          "post_fixable": true,
+          "status": "post-production"
+        }
+      ]
     },
     {
       "id": "e1s05",
@@ -189,7 +256,18 @@
       "last_frame": "Change only the monitor: it is now turned further toward the left and its screen shows one large number 0",
       "action": "Clerk's hand turns the monitor toward Traveler on the left; the large number on the screen drops from 3 to 0, in one smooth move",
       "sound": "the soft creak of the monitor stand turning",
-      "text": "the number on the monitor screen"
+      "text": "the number on the monitor screen",
+      "review": [
+        {
+          "round": 0,
+          "by": "self",
+          "step": "2",
+          "issue": "the H sign came out as half an H; a medium shot instead of an insert",
+          "fix": "tight insert of the monitor, no sign in view; re-rolled with its last frame",
+          "status": "done (attempt 1)",
+          "post_fixable": false
+        }
+      ]
     },
     {
       "id": "e1s06",
@@ -203,13 +281,25 @@
       ],
       "shot": "close-up",
       "camera": "static",
-      "duration": 4,
+      "duration": 5,
       "frame": "Close-up of Traveler at the counter, gripping her phone at the counter edge, looking up",
       "action": "Her eyes lift from the monitor back to Clerk's face; her hand tightens around the phone at the counter edge first, then her upper body leans forward",
       "speaker": "traveler",
-      "line": "Then upgrade me. Or downgrade me.",
+      "line": "Then upgrade me, or downgrade me to whatever car you have.",
       "delivery": "pressing, fast",
-      "sound": "the rental hall murmur"
+      "sound": "the rental hall murmur",
+      "review": [
+        {
+          "round": 1,
+          "by": "human",
+          "step": "review v1",
+          "issue": "the line does not say she will take any other car; with no cars left she has to ask for any option",
+          "verbatim": "这个改台词 upgrade me or downgrade to whatever available cars you have. 之类的讲清楚因为说没车就要问别的option",
+          "fix": "line rewritten; 4 s → 5 s",
+          "status": "renders in the final pass",
+          "post_fixable": false
+        }
+      ]
     },
     {
       "id": "e1s07",
@@ -221,14 +311,26 @@
       "props": [],
       "shot": "close-up",
       "camera": "static",
-      "duration": 6,
+      "duration": 7,
       "frame": "Close-up of Clerk behind the counter, one hand on the monitor at the right end of the counter, the H sign wall behind him",
       "action": "He turns the monitor back to its original position, returns both hands to the counter, and gives one small nod of the chin on the word may; his tone stays level",
       "speaker": "clerk",
-      "line": "Both are gone. If you wait two hours, you may get compensation.",
+      "line": "I'm sorry, neither is possible. They're all gone. If you wait two hours, you may get compensation.",
       "delivery": "level, careful",
       "sound": "the rental hall murmur, the monitor stand turning",
-      "text": "the H on the sign behind him"
+      "text": "the H on the sign behind him",
+      "review": [
+        {
+          "round": 1,
+          "by": "human",
+          "step": "review v1",
+          "issue": "'Both are gone' should apologise that neither option is possible, that everything is gone",
+          "verbatim": "这里可能需要把both are gone改 抱歉都不可行都没了",
+          "fix": "line rewritten; 6 s → 7 s",
+          "status": "renders in the final pass",
+          "post_fixable": false
+        }
+      ]
     },
     {
       "id": "e1s08",
@@ -243,10 +345,70 @@
       "shot": "insert close-up",
       "camera": "static",
       "duration": 4,
-      "frame": "Insert close-up of Traveler's hand holding her phone above the yellow counter; the screen shows a short list of rental app tiles, each reading NO CARS, and at the bottom of the screen one large near-black square app icon with a white car symbol and the word RIDE under it",
-      "action": "Her thumb swipes across the row of rival rental apps, each showing NO CARS, pauses for a beat, then taps the near-black RIDE icon, at normal speed",
+      "frame": "Tight insert close-up of Traveler's hand holding her phone, the phone filling most of the frame: the screen shows three stacked rental-app cards, one red, one black with green accents and one blue, each with a simple car icon and the words NO CARS, and at the bottom one near-black square app icon with a white car symbol and the word RIDE under it; the yellow counter soft and blurred behind",
+      "action": "Her thumb swipes past the red, the black-and-green and the blue app, each showing NO CARS, pauses for a beat, then taps the near-black RIDE icon, at normal speed",
       "sound": "soft taps of a thumb on the phone screen, the rental hall murmur",
-      "text": "NO CARS on the app tiles and RIDE under the dark icon"
+      "text": "NO CARS on each of the three app cards, and RIDE under the dark icon",
+      "review": [
+        {
+          "round": 0,
+          "by": "self",
+          "step": "2",
+          "issue": "the RIDE icon was missing",
+          "fix": "icon named in the frame; re-rolled",
+          "status": "done (attempt 1)",
+          "post_fixable": false
+        },
+        {
+          "round": 1,
+          "by": "human",
+          "step": "review v1",
+          "issue": "show the other platforms, red, black with green and blue, all with NO CARS, as a detailed screen; frame only the hand, zoomed in",
+          "verbatim": "这个的话得重新生成图 就是其他平台 红色的 黑色里绿色的 蓝色的 都No cars 。更仔细的手机屏幕截图。 只拍放大后的手就行。",
+          "fix": "first frame redrawn: tight insert of hand and phone, three coloured app cards each reading NO CARS",
+          "status": "image redrawn in v1",
+          "post_fixable": false
+        }
+      ]
+    },
+    {
+      "id": "e1s08b",
+      "scene": "1-1",
+      "location": "counter",
+      "characters": [
+        "traveler"
+      ],
+      "props": [
+        "phone"
+      ],
+      "shot": "point-of-view insert",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Point-of-view close-up looking down at the phone in Traveler's hand, only her hand and the cuff of her coral jacket visible, no face anywhere: the screen shows a ride-hailing app with black and white branding, the word RIDE at the top, a small map, exactly three ride options with prices (Standard $38, Priority Pickup $46, XL $55) with Priority Pickup highlighted, and a driver card at the bottom (4.9 stars, Yellow sedan, 3 min away) above a black Confirm button; the yellow counter soft and blurred below",
+      "action": "Her thumb taps Priority Pickup, then taps the black Confirm button; the driver card reads 3 min away, at normal speed",
+      "sound": "soft taps on the phone screen, the rental hall murmur",
+      "text": "RIDE, the three ride options with their prices, 4.9, Yellow sedan, 3 min away and Confirm",
+      "review": [
+        {
+          "round": 1,
+          "by": "human",
+          "step": "review v1",
+          "issue": "add a ride-hailing screen with Uber-like branding: pick a tier (Priority Pickup and others) with prices, and a driver, so it reads as hailing a ride",
+          "verbatim": "然后再多一个手机屏幕截图 类似uber的branding的屏幕选 driver 和 tier （priority pickup, etc之类的和价格 ）看出来在打车",
+          "fix": "new shot after e1s08; a fictional RIDE app in black and white, no real brand",
+          "status": "new image drawn in v1",
+          "post_fixable": false
+        },
+        {
+          "round": 1,
+          "by": "self",
+          "step": "review v1",
+          "issue": "first draw showed her face sharp beside the phone, and two extra rows of garbled prices",
+          "fix": "point-of-view framing, hand and sleeve only; exactly three options; re-rolled",
+          "post_fixable": false,
+          "status": "image redrawn in v1 (attempt 1)"
+        }
+      ]
     },
     {
       "id": "e1s09",
@@ -257,17 +419,32 @@
       ],
       "props": [
         "suitcase",
-        "phone",
-        "sedan"
+        "phone"
       ],
       "shot": "wide establishing shot",
       "camera": "static",
       "duration": 5,
-      "frame": "Wide shot of the sunny airport pickup curb: Traveler stands at the edge of the sidewalk on the right, filling about half the frame height, the teal suitcase beside her, phone in hand, looking down the lane; far in the left background the small yellow H sedan is just entering the pickup lane",
-      "last_frame": "Change only the car: the small yellow sedan has now pulled up and stopped in the pickup lane right in front of Traveler, its driver-side door with the H badge facing her",
-      "action": "The yellow sedan drives in from the left background, slows down and stops right in front of Traveler, its driver-side door with the H badge facing her",
+      "frame": "Wide shot of the sunny airport pickup curb: Traveler stands at the edge of the sidewalk on the right, filling about half the frame height, the teal suitcase beside her, phone in hand, looking down the pickup lane to the left; the lane is empty, with no car anywhere in sight",
+      "last_frame": "Change only the lane: a small yellow sedan has now pulled up and stopped in the pickup lane right in front of Traveler, its driver-side door with the H badge facing her",
+      "action": "Traveler waits at the curb, looking down the empty lane; the yellow H sedan drives in from the left, slows down and stops right in front of her, its driver-side door with the H badge facing her",
       "sound": "airport curb traffic, a distant horn, tires slowing to a stop",
-      "text": "the H badge on the car door; the license plates stay blank"
+      "text": "the H badge on the car door; the license plates stay blank",
+      "last_refs": [
+        "prop:sedan"
+      ],
+      "review": [
+        {
+          "round": 1,
+          "by": "human",
+          "step": "review v1",
+          "manual": true,
+          "issue": "the car was already in the first frame, parked nearby; she is waiting for it to come, so the space read wrong",
+          "verbatim": "这个去掉背景里的车 她在等车来 你这个空间对应关系不对。（一定要在我的manul表格里说）",
+          "fix": "first frame with an empty lane; the sedan arrives in the clip; the last frame is drawn with the sedan sheet as a reference",
+          "status": "image and last frame redrawn in v1",
+          "post_fixable": false
+        }
+      ]
     },
     {
       "id": "e1s10",
@@ -330,25 +507,6 @@
       "sound": "curb traffic"
     },
     {
-      "id": "e1s13",
-      "scene": "1-2",
-      "location": "curb",
-      "characters": [
-        "driver"
-      ],
-      "props": [
-        "sedan"
-      ],
-      "location_ref": false,
-      "shot": "insert close-up",
-      "camera": "static",
-      "duration": 4,
-      "frame": "Insert close-up of the yellow sedan's instrument cluster, seen through the open upper gap of the steering wheel: a digital odometer display in the center of the cluster shows 70,000 in large, clear white digits, fully visible and not covered by the wheel rim; Driver's fingertips rest on the dashboard beside it; the steering wheel hub is plain, with no emblem or lettering",
-      "action": "Driver's fingers tap the dashboard twice; the odometer clearly reads 70,000, at normal speed",
-      "sound": "two light taps on the dashboard",
-      "text": "70,000 on the odometer display, and nothing else"
-    },
-    {
       "id": "e1s14",
       "scene": "1-2",
       "location": "curb",
@@ -366,7 +524,68 @@
       "speaker": "driver",
       "line": "She had two hundred miles when I got her. Soon H sells her, while she's still worth something.",
       "delivery": "warm, proud",
-      "sound": "curb traffic"
+      "sound": "curb traffic",
+      "review": [
+        {
+          "round": 1,
+          "by": "human",
+          "step": "review v1",
+          "issue": "plays before the odometer insert now",
+          "verbatim": "13 14换位置",
+          "fix": "moved before e1s13",
+          "status": "reordered in v1",
+          "post_fixable": false
+        }
+      ]
+    },
+    {
+      "id": "e1s13",
+      "scene": "1-2",
+      "location": "curb",
+      "characters": [
+        "driver"
+      ],
+      "props": [
+        "sedan"
+      ],
+      "location_ref": false,
+      "shot": "insert close-up",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Insert close-up of the yellow sedan's instrument cluster, seen through the open upper gap of the steering wheel: a digital odometer display in the center of the cluster shows 70,000 in large, clear white digits, fully visible and not covered by the wheel rim; Driver's fingertips rest on the dashboard beside it; the steering wheel hub is plain, with no emblem or lettering",
+      "action": "Driver's fingers tap the dashboard twice; the odometer clearly reads 70,000, at normal speed",
+      "sound": "two light taps on the dashboard",
+      "text": "70,000 on the odometer display, and nothing else",
+      "review": [
+        {
+          "round": 0,
+          "by": "self",
+          "step": "2",
+          "issue": "a Ford-like emblem on the steering wheel; the odometer unreadable",
+          "fix": "digital odometer named, plain wheel hub; re-rolled",
+          "status": "done (attempt 1)",
+          "post_fixable": false
+        },
+        {
+          "round": 0,
+          "by": "self",
+          "step": "2",
+          "issue": "the wheel rim hid half of the number",
+          "fix": "cluster seen through the wheel's upper gap; re-rolled",
+          "status": "done (attempt 2)",
+          "post_fixable": false
+        },
+        {
+          "round": 1,
+          "by": "human",
+          "step": "review v1",
+          "issue": "the odometer insert belongs after the Driver's line",
+          "verbatim": "这个得换位置 放到e1s14 … 这个之后 也就是13 14换位置",
+          "fix": "moved after e1s14",
+          "status": "reordered in v1",
+          "post_fixable": false
+        }
+      ]
     },
     {
       "id": "e1s15",
@@ -378,13 +597,37 @@
       "props": [
         "phone"
       ],
-      "shot": "over-the-shoulder insert",
+      "shot": "point-of-view insert",
       "camera": "static",
-      "duration": 4,
-      "frame": "Over-the-shoulder close-up of Traveler's phone in her hand: the screen is filled with rows of photos of yellow H sedans, each tagged FOR SALE; her face soft in the background",
-      "action": "She scrolls the FOR SALE listings; her lips relax first, then lift into a smile",
+      "duration": 5,
+      "frame": "Point-of-view close-up looking down at the phone in Traveler's hand, only her hand and the cuff of her coral jacket visible, no face anywhere: the screen shows a car-sales listings page titled H Car Sales, rows of photos of yellow H sedans, each tagged FOR SALE with a price; the sunny sidewalk soft and blurred below",
+      "action": "Her thumb scrolls the H Car Sales listings; a small amused breath, then she speaks, her face out of frame",
       "sound": "curb traffic",
-      "text": "FOR SALE on the listings and the H badges in the photos"
+      "text": "H Car Sales at the top, FOR SALE tags with prices, and the H badges in the photos",
+      "speaker": "traveler",
+      "line": "Oh, true. H sells lots of its cars on H Car Sales.",
+      "delivery": "amused, realizing",
+      "review": [
+        {
+          "round": 1,
+          "by": "human",
+          "step": "review v1",
+          "issue": "needs a close-up of the phone and Traveler's voice: oh true, H sells lots of cars on H Car Sales",
+          "verbatim": "这个要手机特写和女的的声音 oh true, H sell lots of car on H car for sale.",
+          "fix": "tight phone close-up of an H Car Sales page; Traveler says the line; 4 s → 5 s",
+          "status": "image redrawn in v1; line renders in the final pass",
+          "post_fixable": false
+        },
+        {
+          "round": 1,
+          "by": "self",
+          "step": "review v1",
+          "issue": "first draw read as two people: the back of a head in the foreground and her face behind the phone",
+          "fix": "point-of-view framing, hand and sleeve only, her voice from out of frame; re-rolled",
+          "post_fixable": false,
+          "status": "image redrawn in v1 (attempt 2)"
+        }
+      ]
     },
     {
       "id": "e1s16",
@@ -456,7 +699,20 @@
       "speaker": "driver",
       "line": "Safe travels!",
       "delivery": "light, cheerful",
-      "sound": "a steady tire hum, quiet air conditioning"
+      "sound": "a steady tire hum, quiet air conditioning",
+      "post": "Crop in post to hide the missing seat behind the Driver.",
+      "review": [
+        {
+          "round": 1,
+          "by": "human",
+          "step": "review v1",
+          "issue": "no seat behind the Driver in the first frame",
+          "verbatim": "这个场景的图片司机背后没有椅子 但是可以通过剪裁遮盖所以还好",
+          "fix": "none now; crop in post",
+          "post_fixable": true,
+          "status": "post-production"
+        }
+      ]
     },
     {
       "id": "e1s20",
@@ -475,5 +731,6 @@
       "line": "Next time, add your flight number so the rental desk can track delays. Check the pickup terms, and keep a backup ride in mind.",
       "sound": "waves and sea wind, a distant tire hum"
     }
-  ]
+  ],
+  "version": "v1 · human feedback round 1"
 }
