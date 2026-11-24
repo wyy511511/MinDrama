@@ -1,21 +1,29 @@
 #!/usr/bin/env python3
-"""A micro-drama with consistent characters, rendered end to end on Nunchux Modelverse.
+"""Micro-dramas with a consistent cast, rendered end to end on Nunchux Modelverse.
 
-How the characters stay the same from shot to shot:
-  1. refs       FLUX 3 Image Klein draws one reference sheet per character, prop and location.
-  2. keyframes  FLUX 3 Klein Edit draws every shot's first frame from those sheets (up to 10 references).
-  3. clips      MiniMax H3 Fast animates each first frame into a clip with its dialogue and sound.
-  4. assemble   ffmpeg joins the clips with subtitles, a title card and an end card with the receipts.
+How the cast stays the same from shot to shot:
+  refs       FLUX 3 Image Klein draws one reference sheet per character, prop and location.
+  keyframes  FLUX 3 Klein Edit draws each shot's first frame from those sheets (up to 10 references), and a
+             last frame when the shot needs a precise end state (a number that changes, a car that stops).
+  clips      MiniMax H3 Fast animates each shot from its first (and last) frame, with dialogue and sound.
+  assemble   ffmpeg joins the clips with timed subtitles, a title card and an end card with the receipts.
 
-    python3 make_film.py plan                          # shot list and cost estimate; no API calls
-    python3 make_film.py all --pass draft              # 480p on the Radical Value tier
-    python3 make_film.py clips --pass draft --shots s03,s09 --redo   # re-roll two shots with new seeds
-    python3 make_film.py all --pass final              # 768p on the Radical Speed tier
-    python3 make_film.py all --pass draft --dry-run    # placeholder media, no key, no cost (out-dryrun/)
+Steps, in order (each one keeps what already exists, so any of them can be re-run):
+    python3 make_film.py plan                  # shot list, timing checks, cost estimate; no API calls
+    python3 make_film.py requests              # every request body the run would send; no API calls
+    python3 make_film.py credits               # your balance and limits
+    python3 make_film.py refs                  # characters, props, locations
+    python3 make_film.py keyframes             # first (and last) frames of every shot
+    python3 make_film.py voices                # one draft clip per voice, to listen before rendering everything
+    python3 make_film.py clips --pass draft    # 480p on the Radical Value tier
+    python3 make_film.py assemble --pass draft
+    python3 make_film.py review                # out/<story>/review.html: every image, prompt and clip
+    python3 make_film.py all --pass final      # 768p on the Radical Speed tier, then the film
 
-Every API call is appended to out/receipts.jsonl with its latency and estimated cost, and the run stops
-before a call would take the estimated spend past --budget (default $8, or BUDGET_USD in .env).
-Standard library only; needs ffmpeg and ffprobe on PATH.
+Re-roll with a new seed: --shots e1s04,e1s11 --redo (refs: refs --redo character:clerk).
+--story picks the story file; --dry-run draws placeholders with ffmpeg (no key, no cost, out-dryrun/).
+Every call is appended to out/<story>/receipts.jsonl with its latency and estimated cost, and a run stops before
+the estimated spend would pass --budget (default $8, or BUDGET_USD in .env). Needs ffmpeg; standard library only.
 """
 from __future__ import annotations
 
@@ -23,6 +31,7 @@ import argparse
 import base64
 import concurrent.futures as cf
 import hashlib
+import html
 import json
 import os
 import random
@@ -40,8 +49,9 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+DEFAULT_STORY = ROOT / "stories" / "rental-booking-paradox.json"
 API = "https://api.nunchux.com"
-UA = "microdrama/1.0"
+UA = "mindrama/1.0"
 IMAGE_MODEL = "nunchux-flux.3-image-klein"
 EDIT_MODEL = "nunchux-flux.3-image-klein-edit"
 VIDEO_MODEL = "nunchux-minimax-h3-fast-fl2va"
@@ -49,6 +59,7 @@ PASSES = {
     "draft": {"tier": "radical_value", "short_edge": 480},
     "final": {"tier": "radical_speed", "short_edge": 768},
 }
+CLIP_SECONDS = (4, 15)        # what MiniMax H3 Fast accepts per call
 # Estimates from nunchux.ai/pricing, read 2026-11-23: $ per megapixel (images) and $ per output second (video).
 # Text-to-image Klein is assumed to cost what Klein Edit costs. Check the live page; receipts call these estimates.
 IMAGE_PER_MP = {"radical_speed": 0.006, "radical_value": 0.004}
@@ -61,7 +72,7 @@ FONTS = {
               "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "C:/Windows/Fonts/ariblk.ttf"],
 }
 
-OUT = ROOT / "out"            # set in main(); out-dryrun/ for --dry-run
+OUT = ROOT / "out"            # set in main(): out/<story>/ or out-dryrun/<story>/
 _print_lock = threading.Lock()
 
 
@@ -82,6 +93,10 @@ def now_iso() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%S%z")
 
 
+def slug(s: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+
+
 def load_env() -> None:
     env = ROOT / ".env"
     if not env.exists():
@@ -93,12 +108,33 @@ def load_env() -> None:
             os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 
 
+# ---------------------------------------------------------------- request bodies (shared by real calls and previews)
+def image_body(prompt: str, w: int, h: int, tier: str, seed: int) -> dict:
+    return {"model": IMAGE_MODEL, "prompt": prompt, "width": w, "height": h, "tier": tier, "seed": seed,
+            "response_format": "url"}
+
+
+def edit_body(prompt: str, images: list[str], w: int, h: int, tier: str, seed: int) -> dict:
+    return {"model": EDIT_MODEL, "prompt": prompt, "image": images[:10], "width": w, "height": h, "tier": tier,
+            "seed": seed, "response_format": "url"}
+
+
+def video_body(prompt: str, first_url: str, last_url: str | None, duration: float, short_edge: int, aspect: str,
+               tier: str, seed: int) -> dict:
+    refs = [{"role": "first_frame", "url": first_url}]
+    if last_url:
+        refs.append({"role": "last_frame", "url": last_url})
+    return {"model": VIDEO_MODEL, "prompt": prompt, "tier": tier, "duration": duration, "seed": seed, "refs": refs,
+            "extra": {"short_edge": short_edge, "aspect_ratio": aspect}, "response_format": "url"}
+
+
 # ---------------------------------------------------------------- HTTP
 def http_json(method: str, url: str, headers: dict, body: dict | None = None, timeout: float = 120,
               attempts: int = 5) -> dict:
     """JSON over HTTPS. Retries 429 and 5xx with backoff (honouring Retry-After), as the API's docs ask.
     A POST that times out is not retried: a synchronous generation may still have run and been billed."""
     data = json.dumps(body).encode() if body is not None else None
+    path = urllib.parse.urlparse(url).path
     for i in range(attempts):
         req = urllib.request.Request(url, data=data, method=method, headers=headers)
         try:
@@ -109,16 +145,16 @@ def http_json(method: str, url: str, headers: dict, body: dict | None = None, ti
             text = e.read().decode("utf-8", "replace")[:1500]
             if e.code in (429, 500, 502, 503, 504) and i < attempts - 1:
                 wait = float(e.headers.get("Retry-After") or 2 ** i)
-                log(f"    {e.code} from {urllib.parse.urlparse(url).path}; retrying in {wait:.0f} s ({text[:160]})")
+                log(f"    {e.code} from {path}; retrying in {wait:.0f} s ({text[:160]})")
                 time.sleep(wait)
                 continue
-            raise ApiError(f"{method} {urllib.parse.urlparse(url).path} answered {e.code}: {text}") from None
+            raise ApiError(f"{method} {path} answered {e.code}: {text}") from None
         except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
             if method == "GET" and i < attempts - 1:
                 time.sleep(2 ** i)
                 continue
-            raise ApiError(f"{method} {urllib.parse.urlparse(url).path} failed: {e}") from None
-    raise ApiError(f"{method} {url}: out of retries")
+            raise ApiError(f"{method} {path} failed: {e}") from None
+    raise ApiError(f"{method} {path}: out of retries")
 
 
 def output_of(r: dict) -> dict:
@@ -132,8 +168,7 @@ def output_of(r: dict) -> dict:
 
 def trimmed(r: dict) -> dict:
     """The answer without base64 payloads, for the receipts."""
-    s = json.dumps(r)
-    return json.loads(re.sub(r'"b64_json":\s*"[^"]{200,}"', '"b64_json": "<omitted>"', s))
+    return json.loads(re.sub(r'"b64_json":\s*"[^"]{200,}"', '"b64_json": "<omitted>"', json.dumps(r)))
 
 
 # ---------------------------------------------------------------- providers
@@ -144,23 +179,16 @@ class Nunchux:
     def __init__(self, key: str):
         self.h = {"X-API-Key": key, "Content-Type": "application/json", "Accept": "application/json", "User-Agent": UA}
 
-    def image(self, prompt: str, w: int, h: int, tier: str, seed: int) -> dict:
-        body = {"model": IMAGE_MODEL, "prompt": prompt, "width": w, "height": h, "tier": tier, "seed": seed,
-                "response_format": "url"}
-        r = http_json("POST", f"{API}/v1/images/generations", self.h, body, timeout=240)
+    def image(self, prompt, w, h, tier, seed) -> dict:
+        r = http_json("POST", f"{API}/v1/images/generations", self.h, image_body(prompt, w, h, tier, seed), timeout=240)
         return {"output": output_of(r), "raw": trimmed(r)}
 
-    def edit(self, prompt: str, images: list[str], w: int, h: int, tier: str, seed: int) -> dict:
-        body = {"model": EDIT_MODEL, "prompt": prompt, "image": images[:10], "width": w, "height": h, "tier": tier,
-                "seed": seed, "response_format": "url"}
-        r = http_json("POST", f"{API}/v1/images/edits", self.h, body, timeout=240)
+    def edit(self, prompt, images, w, h, tier, seed) -> dict:
+        r = http_json("POST", f"{API}/v1/images/edits", self.h, edit_body(prompt, images, w, h, tier, seed), timeout=240)
         return {"output": output_of(r), "raw": trimmed(r)}
 
-    def video(self, prompt: str, first_frame_url: str, duration: float, short_edge: int, aspect: str, tier: str,
-              seed: int) -> dict:
-        body = {"model": VIDEO_MODEL, "prompt": prompt, "tier": tier, "duration": duration, "seed": seed,
-                "refs": [{"role": "first_frame", "url": first_frame_url}],
-                "extra": {"short_edge": short_edge, "aspect_ratio": aspect}, "response_format": "url"}
+    def video(self, prompt, first_url, last_url, duration, short_edge, aspect, tier, seed) -> dict:
+        body = video_body(prompt, first_url, last_url, duration, short_edge, aspect, tier, seed)
         r = http_json("POST", f"{API}/v1/videos/generations", self.h, body, timeout=900, attempts=4)
         if not r.get("data"):
             task = r.get("id") or r.get("task_id")
@@ -179,7 +207,7 @@ class Nunchux:
                 try:
                     r = http_json("GET", url, self.h, timeout=60, attempts=2)
                 except ApiError as e:
-                    if " 404" in str(e) or "answered 404" in str(e):
+                    if "answered 404" in str(e):
                         routes.remove(url)
                         continue
                     raise
@@ -222,8 +250,9 @@ class DryRun:
     def _still(self, prompt: str, w: int, h: int, label: str) -> dict:
         time.sleep(random.uniform(0.2, 0.6))
         out = self._next(".png")
-        text_card(out, w, h, None, [(f"DRY RUN · {label}", "text", 30, "h*0.42"),
-                                    ("\n".join(textwrap.wrap(prompt, 34)[:6]), "text", 22, "h*0.48")],
+        cols = max(24, int(w / 22))
+        text_card(out, w, h, None, [(f"DRY RUN · {label}", "text", 30, "h*0.40"),
+                                    ("\n".join(textwrap.wrap(prompt, cols)[:7]), "text", 20, "h*0.40+56")],
                   bg=self._color(prompt))
         return {"output": {"url": f"dryrun://{out}"}, "raw": {"dry_run": True}}
 
@@ -233,11 +262,11 @@ class DryRun:
     def edit(self, prompt, images, w, h, tier, seed):
         return self._still(prompt, w, h, f"edit, {len(images)} refs")
 
-    def video(self, prompt, first_frame_url, duration, short_edge, aspect, tier, seed):
+    def video(self, prompt, first_url, last_url, duration, short_edge, aspect, tier, seed):
         time.sleep(random.uniform(0.4, 1.0))
         w, h = frame_size(short_edge, aspect)
         out = self._next(".mp4")
-        src = first_frame_url[len("dryrun://"):] if first_frame_url.startswith("dryrun://") else None
+        src = first_url[len("dryrun://"):] if first_url.startswith("dryrun://") else None
         inputs = ["-loop", "1", "-i", src] if src else ["-f", "lavfi", "-i", f"color=c=0x202024:s={w}x{h}:r=24"]
         run(["ffmpeg", "-y", "-v", "error", *inputs, "-f", "lavfi", "-i", f"sine=frequency=220:duration={duration}",
              "-t", str(duration), "-vf", f"scale={w}:{h},setsar=1,fps=24,format=yuv420p",
@@ -276,7 +305,7 @@ def frame_size(short_edge: int, aspect: str) -> tuple[int, int]:
 
 
 def font(kind: str) -> str | None:
-    """A copy of a system font under out/_fonts/, so filter arguments never hold spaces."""
+    """A copy of a system font under the output folder, so filter arguments never hold spaces."""
     dest = OUT / "_fonts" / f"{kind}.ttf"
     if dest.exists():
         return str(dest)
@@ -288,14 +317,17 @@ def font(kind: str) -> str | None:
     return None
 
 
-def drawtext(textfile: Path, kind: str, size: int, y: str, color: str = "white", box: bool = False) -> str:
+def drawtext(textfile: Path, kind: str, size: int, y: str, color: str = "white", box: bool = False,
+             enable: tuple[float, float] | None = None) -> str:
     f = font(kind)
     parts = [f"textfile={textfile}", "expansion=none", f"fontsize={size}", f"fontcolor={color}",
              "x=(w-text_w)/2", f"y={y}", "line_spacing=10", "text_align=C"]   # text_align: ffmpeg 6.1+
     if f:
         parts.append(f"fontfile={f}")
     if box:
-        parts += ["box=1", "boxcolor=black@0.5", "boxborderw=16"]
+        parts += ["box=1", "boxcolor=black@0.5", "boxborderw=14"]
+    if enable:
+        parts.append(f"enable='between(t,{enable[0]:.2f},{enable[1]:.2f})'")
     return "drawtext=" + ":".join(parts)
 
 
@@ -305,6 +337,10 @@ def text_file(text: str) -> Path:
     p = tmp / f"t-{hashlib.md5(text.encode()).hexdigest()[:12]}.txt"
     p.write_text(text, encoding="utf-8")
     return p
+
+
+ENCODE = ["-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-pix_fmt", "yuv420p", "-r", "24",
+          "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2"]
 
 
 def text_card(out: Path, w: int, h: int, seconds: float | None, blocks: list[tuple[str, str, int, str]],
@@ -323,10 +359,6 @@ def text_card(out: Path, w: int, h: int, seconds: float | None, blocks: list[tup
     return out
 
 
-ENCODE = ["-c:v", "libx264", "-preset", "veryfast", "-crf", "18", "-pix_fmt", "yuv420p", "-r", "24",
-          "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2"]
-
-
 def to_jpeg(src: Path) -> Path:
     dst = src.with_suffix(".jpg") if src.suffix.lower() != ".jpg" else src
     if dst != src:
@@ -342,7 +374,7 @@ EXT = {"image/png": ".png", "image/jpeg": ".jpg", "image/webp": ".webp", "video/
 
 
 def fetch(output: dict, dest_stem: Path) -> Path:
-    """Save an API output next to the manifest. URLs can expire within the hour, so this runs right away."""
+    """Save an API output right away: clip URLs can expire within the hour."""
     dest_stem.parent.mkdir(parents=True, exist_ok=True)
     if "b64" in output:
         raw = base64.b64decode(output["b64"])
@@ -370,7 +402,7 @@ def fetch(output: dict, dest_stem: Path) -> Path:
 
 # ---------------------------------------------------------------- state
 class Ledger:
-    """out/receipts.jsonl: one row per API call. The budget counts calls that succeeded plus calls in flight."""
+    """receipts.jsonl: one row per API call. The budget counts calls that succeeded plus calls in flight."""
 
     def __init__(self, path: Path, budget: float):
         self.path, self.budget = path, budget
@@ -402,7 +434,7 @@ class Ledger:
 
 
 class Manifest:
-    """out/manifest.json: what exists now (paths relative to out/), with the URL and seed behind each file."""
+    """manifest.json: what exists now (paths relative to the output folder), with the URL and seed behind each file."""
 
     def __init__(self, path: Path):
         self.path = path
@@ -427,58 +459,108 @@ class Manifest:
         os.replace(tmp, self.path)
 
 
-# ---------------------------------------------------------------- prompts
+# ---------------------------------------------------------------- story → prompts
 def seed_for(story: dict, key: str, attempt: int) -> int:
     return int(hashlib.sha1(f"{story['seed']}:{key}".encode()).hexdigest()[:8], 16) % 1_000_000 + attempt
 
 
+def sizes(story: dict) -> dict:
+    kf = story["keyframe_size"]
+    return {"character": story.get("sheet_size", [896, 1152]), "prop": story.get("prop_size", [1024, 1024]),
+            "location": story.get("location_size", kf), "keyframe": kf}
+
+
+def on_screen(story: dict, cid: str) -> bool:
+    return not story["characters"][cid].get("vo")
+
+
+def character_sheet_prompt(story: dict, c: dict, w: int, h: int) -> str:
+    if w > h:
+        layout = ("Character turnaround sheet of one person on a seamless plain light-grey (#DCDCDC) background, "
+                  "landscape layout: a large head close-up facing the camera on the left; full-body front, side and "
+                  "back views in the middle; a row of three head close-ups along the bottom (front, three-quarter, "
+                  "profile) with a neutral expression. The same single person in every view, identical proportions, "
+                  "outfit and hair; feet fully visible; even diffuse light, no shadows.")
+    else:
+        layout = ("Character reference photo of one person: full body, standing, facing the camera, relaxed neutral "
+                  "expression, plain light-grey studio backdrop, soft even light, sharp focus on the face.")
+    pose = c.get("pose", "arms relaxed at the sides")
+    return (f"{layout} {c['name']}: {c['look'].rstrip('.')}. Outfit: {c['outfit']}. Posture upright and relaxed, "
+            f"{pose}, the other hand relaxed at the side. Photoreal live-action: real skin and fabric texture. "
+            f"No text, no logos, no jewelry or accessories beyond the description.")
+
+
+def prop_sheet_prompt(p: dict, w: int, h: int) -> str:
+    layout = ("Three-view reference sheet of one object on a seamless plain light-grey (#DCDCDC) background, three "
+              "panels side by side: front, back, and a 45-degree three-quarter view; the same single object in every "
+              "panel with identical details; even soft light, no shadows; no people, no hands."
+              if w > h else "Product reference photo of one object on a plain light-grey backdrop, soft even light.")
+    marks = p.get("marks")
+    return (f"{layout} {p['look'].rstrip('.')}. Photoreal product photography. "
+            + (f"The only markings: {marks}." if marks else "No text or logos."))
+
+
+def location_prompt(story: dict, loc: dict) -> str:
+    return (f"Empty establishing shot with no people: {loc['look'].rstrip('.')}. {loc.get('light', '')} "
+            f"{story['style']} {story['avoid']}").replace("  ", " ")
+
+
 def ref_items(story: dict) -> list[tuple[str, str, str, list[int]]]:
     """(manifest key, kind, prompt, size) for every reference sheet."""
+    sz = sizes(story)
     items = []
     for cid, c in story["characters"].items():
-        items.append((f"character:{cid}", "character",
-                      f"Character reference photo of {c['name']}: {c['look']}, wearing {c['outfit']}. Full body, "
-                      f"standing, facing the camera, relaxed neutral expression, plain light-grey studio backdrop, "
-                      f"soft even light, sharp focus on the face. {story['style']} {story['avoid']}",
-                      story["sheet_size"]))
-    for pid, p in story["props"].items():
-        items.append((f"prop:{pid}", "prop",
-                      f"Product reference photo of {p['look']}, open, on a plain light-grey backdrop, soft even light. "
-                      f"{story['avoid']}", [1024, 1024]))
+        if on_screen(story, cid):
+            items.append((f"character:{cid}", "character", c.get("sheet_prompt")
+                          or character_sheet_prompt(story, c, *sz["character"]), sz["character"]))
+    for pid, p in story.get("props", {}).items():
+        items.append((f"prop:{pid}", "prop", p.get("sheet_prompt") or prop_sheet_prompt(p, *sz["prop"]), sz["prop"]))
     for lid, loc in story["locations"].items():
-        items.append((f"location:{lid}", "location",
-                      f"Establishing shot with no people: {loc['look']}. Vertical {story['aspect_ratio']} frame. "
-                      f"{story['style']} {story['avoid']}", story["keyframe_size"]))
+        items.append((f"location:{lid}", "location", loc.get("plate_prompt") or location_prompt(story, loc),
+                      sz["location"]))
     return items
 
 
-def shot_refs(shot: dict) -> list[str]:
+def shot_refs(story: dict, shot: dict) -> list[str]:
     """The manifest keys of a shot's reference images, in the order its prompt names them (Image 1, 2…)."""
-    keys = [f"character:{c}" for c in shot.get("characters", [])] + [f"prop:{p}" for p in shot.get("props", [])]
-    keys.append(f"location:{shot['location']}")
+    keys = [f"character:{c}" for c in shot.get("characters", []) if on_screen(story, c)]
+    keys += [f"prop:{p}" for p in shot.get("props", [])]
+    if shot.get("location_ref", True):
+        keys.append(f"location:{shot['location']}")
     return keys[:10]
 
 
 def keyframe_prompt(story: dict, shot: dict) -> str:
-    parts = [f"{story['style']} Vertical {story['aspect_ratio']} film still, {shot['shot']}.",
-             shot["frame"].rstrip(".") + "."]
-    for i, key in enumerate(shot_refs(shot), 1):
+    w, h = story["keyframe_size"]
+    sheet_w, sheet_h = sizes(story)["character"]
+    parts = [story["style"], f"A {'vertical' if h > w else 'widescreen'} {story['aspect_ratio']} film frame, "
+             f"{shot['shot']}.", shot["frame"].rstrip(".") + "."]
+    for i, key in enumerate(shot_refs(story, shot), 1):
         kind, name = key.split(":")
         if kind == "character":
             c = story["characters"][name]
             outfit = shot.get("wardrobe", {}).get(name, c["outfit"])
-            parts.append(f"{c['name']} is the person in Image {i}: the same face, hair, skin tone and build, "
+            sheet = " (a reference sheet with several views; draw this person once)" if sheet_w > sheet_h else ""
+            parts.append(f"{c['name']} is the person in Image {i}{sheet}: the same face, hair, skin tone and build, "
                          f"wearing {outfit}.")
         elif kind == "prop":
-            parts.append(f"{story['props'][name]['name']} looks exactly like the one in Image {i}.")
+            parts.append(f"{story['props'][name]['name']} looks exactly like the object in Image {i}.")
         else:
-            parts.append(f"The setting is the place in Image {i}.")
+            loc = story["locations"][name]
+            parts.append(f"The setting is the place in Image {i}. {loc.get('light', '')}".strip())
+    parts.append(f"The only readable text: {shot['text']}." if shot.get("text") else "No readable text anywhere.")
     parts.append(story["avoid"])
     return " ".join(parts)
 
 
+def last_frame_prompt(story: dict, shot: dict) -> str:
+    return (f"Image 1 is the first frame of this shot. {shot['last_frame'].rstrip('.')}. Keep the people, faces, "
+            f"outfits, positions, light and framing identical. "
+            + (f"The only readable text: {shot['text']}. " if shot.get("text") else "") + story["avoid"])
+
+
 def chain_prompt(story: dict, shot: dict) -> str:
-    keys = shot_refs(shot)
+    keys = shot_refs(story, shot)
     names = ", ".join(f"Image {i + 2} is {story['characters'][k.split(':')[1]]['name']}"
                       for i, k in enumerate(keys) if k.startswith("character:"))
     return (f"Image 1 is the last frame of the previous shot. Redraw it exactly, same composition, framing and "
@@ -486,18 +568,51 @@ def chain_prompt(story: dict, shot: dict) -> str:
             f"{story['avoid']}")
 
 
-def clip_prompt(story: dict, shot: dict) -> str:
-    parts = ["Image 1 is the first frame.", shot["action"].rstrip(".") + ".", f"Camera: {shot['camera']}."]
-    if shot.get("line"):
-        sp = story["characters"][shot["speaker"]]
-        parts.append(f'{sp["name"]}, in {sp["voice"]}, says: "{shot["line"]}" Only {sp["name"]} speaks.')
-    else:
-        parts.append("No one speaks.")
+def speech(story: dict, shot: dict) -> str:
+    if not shot.get("line"):
+        return "No one speaks."
+    c = story["characters"][shot["speaker"]]
+    if c.get("vo"):
+        return (f'An off-screen narrator who never appears, in {c["voice"]}, says: "{shot["line"]}" '
+                f"No one on screen speaks; every mouth stays closed.")
+    how = f" ({shot['delivery']})" if shot.get("delivery") else ""
+    return f'{c["name"]}{how}, in {c["voice"]}, says: "{shot["line"]}" Only {c["name"]} speaks.'
+
+
+def clip_prompt(story: dict, shot: dict, has_last: bool) -> str:
+    parts = ["Image 1 is the first frame." + (" Image 2 is the last frame; end exactly on it." if has_last else ""),
+             shot["action"].rstrip(".") + ".", f"Camera: {shot['camera']}.", speech(story, shot)]
     if shot.get("sound"):
         parts.append(f"Sound: {shot['sound']}.")
-    parts.append(f"{story['clip_audio']} Keep every face, hairstyle and outfit exactly as in Image 1. "
-                 f"Natural, subtle motion. No on-screen text.")
+    parts.append(f"{story['clip_audio']} Normal speed, no slow motion. Keep every face, hairstyle and outfit exactly "
+                 f"as in Image 1. No captions or subtitles.")
     return " ".join(parts)
+
+
+def check_story(story: dict) -> list[str]:
+    """Problems that would fail a call or confuse the models, found before any money is spent."""
+    out = []
+    chars, props, locs = story["characters"], story.get("props", {}), story["locations"]
+    ids = [s["id"] for s in story["shots"]]
+    if len(ids) != len(set(ids)):
+        out.append("shot ids repeat")
+    for s in story["shots"]:
+        d = float(s.get("duration", 6))
+        if not CLIP_SECONDS[0] <= d <= CLIP_SECONDS[1]:
+            out.append(f"{s['id']}: duration {d} s is outside {CLIP_SECONDS[0]}–{CLIP_SECONDS[1]} s")
+        for c in s.get("characters", []):
+            if c not in chars:
+                out.append(f"{s['id']}: unknown character {c}")
+        for p in s.get("props", []):
+            if p not in props:
+                out.append(f"{s['id']}: unknown prop {p}")
+        if s["location"] not in locs:
+            out.append(f"{s['id']}: unknown location {s['location']}")
+        if s.get("line") and s.get("speaker") not in chars:
+            out.append(f"{s['id']}: the line has no known speaker")
+        if len(shot_refs(story, s)) > 10:
+            out.append(f"{s['id']}: more than 10 reference images")
+    return out
 
 
 # ---------------------------------------------------------------- the pipeline
@@ -506,8 +621,8 @@ class Film:
         self.story, self.p, self.ledger, self.m, self.workers = story, provider, ledger, manifest, workers
         self.shots = {s["id"]: s for s in story["shots"]}
 
-    # one API call, with its receipt
     def call(self, step: str, item: str, model: str, tier: str, est: float, fn, params: dict, pass_=None) -> dict:
+        """One API call, with its receipt."""
         self.ledger.reserve(est, f"{step} {item}")
         t0 = time.time()
         row = {"ts": now_iso(), "step": step, "item": item, "pass": pass_, "model": model, "tier": tier,
@@ -541,68 +656,95 @@ class Film:
                     failed.append(k)
         return failed
 
-    def image_cost(self, w: int, h: int, tier: str) -> float:
+    @staticmethod
+    def image_cost(w: int, h: int, tier: str) -> float:
         return w * h / 1e6 * IMAGE_PER_MP[tier]
 
-    # 1. reference sheets
+    def _attempt(self, section: str, key: str, pass_=None) -> int:
+        """The next attempt number. The files of the previous attempt are kept beside it as name.aN.ext,
+        so a re-roll can be compared with what it replaced, and rolled back."""
+        prev = self.m.get(section, key, pass_)
+        if not prev:
+            return 0
+        for f in {prev.get("file"), prev.get("jpg")} - {None}:
+            p = OUT / f
+            if p.exists():
+                p.rename(p.with_name(f"{p.stem}.a{prev['attempt']}{p.suffix}"))
+        return prev["attempt"] + 1
+
+    # references
     def refs(self, redo: set[str]) -> list[str]:
         tier = self.story["image_tier"]
-        todo = [it for it in ref_items(self.story) if it[0] in redo or not self.m.get("refs", it[0])]
+        todo = {it[0]: it for it in ref_items(self.story) if it[0] in redo or not self.m.get("refs", it[0])}
         if not todo:
             log("refs: all present")
             return []
         log(f"refs: {len(todo)} to draw")
 
-        def one(it):
-            key, kind, prompt, (w, h) = it
-            prev = self.m.get("refs", key)
-            attempt = (prev["attempt"] + 1) if prev else 0
+        def one(key):
+            _, kind, prompt, (w, h) = todo[key]
+            attempt = self._attempt("refs", key)
             seed = seed_for(self.story, key, attempt)
             res = self.call("ref", key, IMAGE_MODEL, tier, self.image_cost(w, h, tier),
                             lambda: self.p.image(prompt, w, h, tier, seed), {"width": w, "height": h, "seed": seed})
             path = fetch(res["output"], OUT / "refs" / key.replace(":", "-"))
             jpg = to_jpeg(path)
-            self.m.put("refs", key, {"file": str(path.relative_to(OUT)), "jpg": str(jpg.relative_to(OUT)),
-                                     "url": res["output"].get("url"), "seed": seed, "attempt": attempt,
-                                     "prompt": prompt, "made": now_iso()})
+            self.m.put("refs", key, {"file": rel(path), "jpg": rel(jpg), "url": res["output"].get("url"), "seed": seed,
+                                     "attempt": attempt, "prompt": prompt, "made": now_iso()})
             log(f"  ✓ {key}")
 
-        by_key = {it[0]: it for it in todo}
-        return self.parallel(lambda k: one(by_key[k]), list(by_key))
+        return self.parallel(one, list(todo))
 
-    # 2. first frames
+    # first and last frames
     def keyframes(self, ids: list[str], redo: bool) -> list[str]:
-        tier = self.story["image_tier"]
         w, h = self.story["keyframe_size"]
-        todo = [i for i in ids if self.shots[i].get("first_frame") != "chain" and (redo or not self.m.get("keyframes", i))]
+        tier = self.story["image_tier"]
+        todo = [i for i in ids if self.shots[i].get("first_frame") != "chain" and (
+            redo or not self.m.get("keyframes", i)
+            or (self.shots[i].get("last_frame") and not self.m.get("keyframes", f"{i}:last")))]
         if not todo:
             log("keyframes: all present")
             return []
-        missing = [k for i in todo for k in shot_refs(self.shots[i]) if not self.m.get("refs", k)]
+        missing = sorted({k for i in todo for k in shot_refs(self.story, self.shots[i]) if not self.m.get("refs", k)})
         if missing:
-            raise RuntimeError(f"reference sheets missing: {', '.join(sorted(set(missing)))} (run: refs)")
-        log(f"keyframes: {len(todo)} to draw")
+            raise RuntimeError(f"reference sheets missing: {', '.join(missing)} (run: refs)")
+        log(f"keyframes: {len(todo)} shots to draw")
 
         def one(sid):
             shot = self.shots[sid]
-            prompt = keyframe_prompt(self.story, shot)
-            images = [data_uri(OUT / self.m.get("refs", k)["jpg"]) for k in shot_refs(shot)]
-            prev = self.m.get("keyframes", sid)
-            attempt = (prev["attempt"] + 1) if prev else 0
-            seed = seed_for(self.story, f"keyframe:{sid}", attempt)
-            res = self.call("keyframe", sid, EDIT_MODEL, tier, self.image_cost(w, h, tier),
-                            lambda: self.p.edit(prompt, images, w, h, tier, seed),
-                            {"width": w, "height": h, "seed": seed, "refs": shot_refs(shot)})
-            path = fetch(res["output"], OUT / "keyframes" / sid)
-            jpg = to_jpeg(path)
-            self.m.put("keyframes", sid, {"file": str(path.relative_to(OUT)), "jpg": str(jpg.relative_to(OUT)),
-                                          "url": res["output"].get("url"), "seed": seed, "attempt": attempt,
-                                          "prompt": prompt, "refs": shot_refs(shot), "made": now_iso()})
-            log(f"  ✓ {sid}")
+            fresh = redo or not self.m.get("keyframes", sid)
+            if fresh:
+                prompt = keyframe_prompt(self.story, shot)
+                images = [data_uri(OUT / self.m.get("refs", k)["jpg"]) for k in shot_refs(self.story, shot)]
+                attempt = self._attempt("keyframes", sid)
+                seed = seed_for(self.story, f"keyframe:{sid}", attempt)
+                res = self.call("keyframe", sid, EDIT_MODEL, tier, self.image_cost(w, h, tier),
+                                lambda: self.p.edit(prompt, images, w, h, tier, seed),
+                                {"width": w, "height": h, "seed": seed, "refs": shot_refs(self.story, shot)})
+                path = fetch(res["output"], OUT / "keyframes" / sid)
+                jpg = to_jpeg(path)
+                self.m.put("keyframes", sid, {"file": rel(path), "jpg": rel(jpg), "url": res["output"].get("url"),
+                                              "seed": seed, "attempt": attempt, "prompt": prompt,
+                                              "refs": shot_refs(self.story, shot), "made": now_iso()})
+                log(f"  ✓ {sid}")
+            if shot.get("last_frame") and (fresh or not self.m.get("keyframes", f"{sid}:last")):
+                first = OUT / self.m.get("keyframes", sid)["jpg"]
+                prompt = last_frame_prompt(self.story, shot)
+                attempt = self._attempt("keyframes", f"{sid}:last")
+                seed = seed_for(self.story, f"keyframe:{sid}:last", attempt)
+                res = self.call("lastframe", sid, EDIT_MODEL, tier, self.image_cost(w, h, tier),
+                                lambda: self.p.edit(prompt, [data_uri(first)], w, h, tier, seed),
+                                {"width": w, "height": h, "seed": seed, "from": sid})
+                path = fetch(res["output"], OUT / "keyframes" / f"{sid}-last")
+                jpg = to_jpeg(path)
+                self.m.put("keyframes", f"{sid}:last", {"file": rel(path), "jpg": rel(jpg),
+                                                        "url": res["output"].get("url"), "seed": seed,
+                                                        "attempt": attempt, "prompt": prompt, "made": now_iso()})
+                log(f"  ✓ {sid} (last frame)")
 
         return self.parallel(one, todo)
 
-    # 3. clips
+    # clips
     def clips(self, pass_: str, ids: list[str], redo: bool) -> list[str]:
         cfg = PASSES[pass_]
         todo = [i for i in ids if redo or not self.m.get("clips", i, pass_)]
@@ -611,9 +753,11 @@ class Film:
             return []
         free = [i for i in todo if self.shots[i].get("first_frame") != "chain"]
         chained = [i for i in todo if self.shots[i].get("first_frame") == "chain"]
-        log(f"clips ({pass_}, {cfg['tier']}, {cfg['short_edge']}p): {len(todo)} to render")
+        secs = sum(float(self.shots[i].get("duration", 6)) for i in todo)
+        log(f"clips ({pass_}, {cfg['tier']}, {cfg['short_edge']}p): {len(todo)} shots, {secs:.0f} s, "
+            f"about ${secs * VIDEO_PER_S[(cfg['tier'], cfg['short_edge'])]:.2f}")
         failed = self.parallel(lambda sid: self.clip(pass_, sid, self.m.get("keyframes", sid)), free)
-        for sid in chained:   # in story order: each one starts from the last frame of the shot before it
+        for sid in chained:   # in story order: each starts from the last frame of the shot before it
             try:
                 self.clip(pass_, sid, self.chain_frame(pass_, sid))
             except BudgetExceeded as e:
@@ -638,41 +782,51 @@ class Film:
         shot = self.shots[sid]
         w, h = self.story["keyframe_size"]
         tier = self.story["image_tier"]
-        images = [data_uri(last)] + [data_uri(OUT / self.m.get("refs", k)["jpg"]) for k in shot_refs(shot)
-                                     if k.startswith("character:")]
+        images = [data_uri(last)] + [data_uri(OUT / self.m.get("refs", k)["jpg"])
+                                     for k in shot_refs(self.story, shot) if k.startswith("character:")]
         seed = seed_for(self.story, f"chain:{sid}", 0)
+        prompt = chain_prompt(self.story, shot)
         res = self.call("chain", sid, EDIT_MODEL, tier, self.image_cost(w, h, tier),
-                        lambda: self.p.edit(chain_prompt(self.story, shot), images, w, h, tier, seed),
+                        lambda: self.p.edit(prompt, images, w, h, tier, seed),
                         {"width": w, "height": h, "seed": seed, "from": prev_id}, pass_=pass_)
         path = fetch(res["output"], OUT / "keyframes" / f"{sid}-chain-{pass_}")
         jpg = to_jpeg(path)
-        entry = {"file": str(path.relative_to(OUT)), "jpg": str(jpg.relative_to(OUT)), "url": res["output"].get("url"),
-                 "seed": seed, "attempt": 0, "prompt": chain_prompt(self.story, shot), "chained_from": prev_id,
-                 "made": now_iso()}
+        entry = {"file": rel(path), "jpg": rel(jpg), "url": res["output"].get("url"), "seed": seed, "attempt": 0,
+                 "prompt": prompt, "chained_from": prev_id, "made": now_iso()}
         self.m.put("keyframes", f"{sid}@{pass_}", entry)
         return entry
 
     def clip(self, pass_: str, sid: str, first: dict | None) -> None:
         if not first or not first.get("url"):
             raise RuntimeError(f"{sid} has no first frame with a URL (run: keyframes)")
+        last = self.m.get("keyframes", f"{sid}:last") if self.shots[sid].get("last_frame") else None
         cfg = PASSES[pass_]
         shot = self.shots[sid]
-        prompt = clip_prompt(self.story, shot)
+        prompt = clip_prompt(self.story, shot, bool(last))
         dur = float(shot.get("duration", 6))
-        prev = self.m.get("clips", sid, pass_)
-        attempt = (prev["attempt"] + 1) if prev else 0
+        attempt = self._attempt("clips", sid, pass_)
         seed = seed_for(self.story, f"clip:{sid}", attempt)
         est = VIDEO_PER_S[(cfg["tier"], cfg["short_edge"])] * dur
         res = self.call("clip", sid, VIDEO_MODEL, cfg["tier"], est,
-                        lambda: self.p.video(prompt, first["url"], dur, cfg["short_edge"], self.story["aspect_ratio"],
-                                             cfg["tier"], seed),
-                        {"duration": dur, "short_edge": cfg["short_edge"], "seed": seed}, pass_=pass_)
+                        lambda: self.p.video(prompt, first["url"], last["url"] if last else None, dur,
+                                             cfg["short_edge"], self.story["aspect_ratio"], cfg["tier"], seed),
+                        {"duration": dur, "short_edge": cfg["short_edge"], "seed": seed, "last_frame": bool(last)},
+                        pass_=pass_)
         path = fetch(res["output"], OUT / "clips" / pass_ / sid)
-        self.m.put("clips", sid, {"file": str(path.relative_to(OUT)), "url": res["output"].get("url"), "seed": seed,
-                                  "attempt": attempt, "prompt": prompt, "made": now_iso()}, pass_)
+        self.m.put("clips", sid, {"file": rel(path), "url": res["output"].get("url"), "seed": seed, "attempt": attempt,
+                                  "prompt": prompt, "made": now_iso()}, pass_)
         log(f"  ✓ {sid}  ({pass_})")
 
-    # 4. the film
+    def voice_shots(self) -> list[str]:
+        """The first shot each voice speaks in, so every voice can be heard before everything is rendered."""
+        seen, ids = set(), []
+        for s in self.story["shots"]:
+            if s.get("line") and s["speaker"] not in seen:
+                seen.add(s["speaker"])
+                ids.append(s["id"])
+        return ids
+
+    # the film
     def assemble(self, pass_: str, music: Path | None = None) -> Path:
         W, H = self.story["output_size"]
         missing = [s["id"] for s in self.story["shots"] if not self.m.get("clips", s["id"], pass_)]
@@ -681,26 +835,32 @@ class Film:
         segdir = OUT / "film" / f"_{pass_}"
         segdir.mkdir(parents=True, exist_ok=True)
         title = self.story["title"]
-        segs = [text_card(segdir / "00-title.mp4", W, H, 2.4, [
-            (title.upper(), "title", 88, "h*0.43"),
-            (f"a {round(self.film_seconds())}-second micro-drama", "text", 30, "h*0.43+120")])]
-        srt, t = [], 2.4
+        s = min(W, H) / 720
+        title_lines = textwrap.wrap(title.upper(), 16)
+        tsize = min(int(88 * s), int(0.88 * W / (0.72 * max(len(x) for x in title_lines))))
+        subtitle = self.story.get("subtitle") or f"a {round(self.film_seconds())}-second micro-drama"
+        block = len(title_lines) * tsize * 1.25          # rendered line height is about 1.25 × the font size
+        top = int(H * 0.42 - block / 2)
+        segs = [text_card(segdir / "00-title.mp4", W, H, 2.6, [
+            ("\n".join(title_lines), "title", tsize, str(top)),
+            (subtitle, "text", int(30 * s), str(int(top + block + 28 * s)))])]
+        srt, t = [], 2.6
         for n, shot in enumerate(self.story["shots"], 1):
             src = OUT / self.m.get("clips", shot["id"], pass_)["file"]
             dst = segdir / f"{n:02d}-{shot['id']}.mp4"
-            self.normalize(src, dst, W, H, shot.get("line"))
-            d = duration_of(dst)
-            if shot.get("line"):
-                srt.append((t, t + d, shot["line"]))
+            cues = self.normalize(src, dst, W, H, shot)
+            srt += [(t + a, t + b, txt) for a, b, txt in cues]
             segs.append(dst)
-            t += d
+            t += duration_of(dst)
         stats = self.stats(pass_)
-        segs.append(text_card(segdir / "99-end.mp4", W, H, 3.6, [
-            (title.upper(), "title", 64, "h*0.36"),
-            (stats["line1"], "text", 30, "h*0.36+110"),
-            (stats["line2"], "text", 30, "h*0.36+160"),
-            ("FLUX 3 Klein Edit + MiniMax H3 Fast", "text", 26, "h*0.36+250"),
-            ("on Nunchux Modelverse", "text", 26, "h*0.36+292")]))
+        esize = int(tsize * 0.72)
+        y1 = int(H * 0.28 + len(title_lines) * esize * 1.25 + 30 * s)
+        segs.append(text_card(segdir / "99-end.mp4", W, H, 3.8, [
+            ("\n".join(title_lines), "title", esize, str(int(H * 0.28))),
+            (stats["line1"], "text", int(30 * s), str(y1)),
+            (stats["line2"], "text", int(30 * s), str(int(y1 + 48 * s))),
+            ("FLUX 3 Klein Edit + MiniMax H3 Fast", "text", int(26 * s), str(int(y1 + 128 * s))),
+            ("on Nunchux Modelverse", "text", int(26 * s), str(int(y1 + 170 * s)))]))
         listing = segdir / "concat.txt"
         listing.write_text("".join(f"file '{p.resolve()}'\n" for p in segs), encoding="utf-8")
         film = OUT / "film" / f"{slug(title)}-{pass_}.mp4"
@@ -715,37 +875,58 @@ class Film:
                  "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
                  "-movflags", "+faststart", str(mixed)])
             os.replace(mixed, film)
-        (film.with_suffix(".srt")).write_text("".join(
-            f"{i}\n{srt_time(a)} --> {srt_time(b)}\n{line}\n\n" for i, (a, b, line) in enumerate(srt, 1)),
+        film.with_suffix(".srt").write_text("".join(
+            f"{i}\n{srt_time(a)} --> {srt_time(b)}\n{txt}\n\n" for i, (a, b, txt) in enumerate(srt, 1)),
             encoding="utf-8")
-        self.m.data["films"][pass_] = {"file": str(film.relative_to(OUT)), "seconds": round(duration_of(film), 2),
-                                       "built": now_iso(), **{k: v for k, v in stats.items() if not k.startswith("line")}}
+        self.m.data["films"][pass_] = {"file": rel(film), "seconds": round(duration_of(film), 2), "built": now_iso(),
+                                       **{k: v for k, v in stats.items() if not k.startswith("line")}}
         self.m.save()
         log(f"film: {film}  ({duration_of(film):.1f} s)")
         return film
 
-    def normalize(self, src: Path, dst: Path, W: int, H: int, line: str | None) -> None:
+    def normalize(self, src: Path, dst: Path, W: int, H: int, shot: dict) -> list[tuple[float, float, str]]:
+        """One clip at the film's size and frame rate, optionally cut to shot['cut'] = [in, out] seconds, with its
+        line burned in as subtitles, one sentence at a time. Returns the subtitle cues (start, end, text)."""
+        cut = shot.get("cut")
+        length = (cut[1] - cut[0]) if cut else duration_of(src)
         vf = (f"scale={W}:{H}:force_original_aspect_ratio=decrease,pad={W}:{H}:(ow-iw)/2:(oh-ih)/2:color=black,"
               f"setsar=1,fps=24")
-        if line:
-            vf += "," + drawtext(text_file("\n".join(textwrap.wrap(line, 30))), "text", 38, "h-text_h-220", box=True)
-        cmd = ["ffmpeg", "-y", "-v", "error", "-i", str(src)]
+        cues: list[tuple[float, float, str]] = []
+        if shot.get("line") and self.story.get("burn_subtitles", True):
+            s = min(W, H) / 720
+            per_line = max(24, int(W / (21 * s)))
+            margin = int(H * (0.17 if H > W else 0.07))
+            sentences = [x for x in re.split(r"(?<=[.!?])\s+", shot["line"].strip()) if x]
+            start, end = 0.25, max(0.5, length - 0.25)
+            total = sum(len(x) for x in sentences)
+            a = start
+            for x in sentences:
+                b = a + (end - start) * len(x) / total
+                cues.append((a, b, x))
+                a = b
+            for a, b, x in cues:
+                vf += "," + drawtext(text_file("\n".join(textwrap.wrap(x, per_line))), "text", int(36 * s),
+                                     f"h-text_h-{margin}", box=True, enable=(a, b))
+        cmd = ["ffmpeg", "-y", "-v", "error"] + (["-ss", str(cut[0]), "-to", str(cut[1])] if cut else []) + ["-i", str(src)]
         if has_audio(src):
             maps = ["-map", "0:v:0", "-map", "0:a:0"]
         else:
             cmd += ["-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo"]
             maps = ["-map", "0:v:0", "-map", "1:a:0", "-shortest"]
         run(cmd + ["-vf", vf + ",format=yuv420p", *maps, *ENCODE, str(dst)])
+        return cues
 
     def film_seconds(self) -> float:
-        return sum(float(s.get("duration", 6)) for s in self.story["shots"])
+        total = 0.0
+        for s in self.story["shots"]:
+            total += (s["cut"][1] - s["cut"][0]) if s.get("cut") else float(s.get("duration", 6))
+        return total
 
     def stats(self, pass_: str) -> dict:
         rows = [r for r in self.ledger.rows() if r.get("status") == "ok"]
         all_in = sum(r["est_cost"] for r in rows)
-        this_cut = sum(r["est_cost"] for r in rows if r["step"] in ("ref", "keyframe")
+        this_cut = sum(r["est_cost"] for r in rows if r["step"] in ("ref", "keyframe", "lastframe")
                        or (r["step"] in ("clip", "chain") and r.get("pass") == pass_))
-        # the render time of the last full run of this pass (one that rendered most of the shots), not of a re-roll
         n = len(self.story["shots"])
         runs = [r for r in self.m.data["runs"] if r.get("pass") == pass_ and r.get("render_seconds")
                 and r.get("clips_rendered", 0) >= 0.8 * n]
@@ -756,12 +937,12 @@ class Film:
                 f"{statistics.median(clip_secs):.0f} s per clip" if clip_secs else "")
         return {"all_in_usd": round(all_in, 2), "this_cut_usd": round(this_cut, 2), "render_seconds": render,
                 "median_clip_seconds": round(statistics.median(clip_secs), 1) if clip_secs else None,
-                "line1": f"{dry}{len(self.story['shots'])} shots · {round(self.film_seconds())} s",
-                "line2": f"${all_in:.2f} all-in · {when}"}
+                "line1": f"{dry}{n} shots · {round(self.film_seconds())} s",
+                "line2": f"${all_in:.2f} all-in" + (f" · {when}" if when else "")}
 
 
-def slug(s: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+def rel(p: Path) -> str:
+    return str(p.relative_to(OUT))
 
 
 def srt_time(t: float) -> str:
@@ -769,51 +950,144 @@ def srt_time(t: float) -> str:
     return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
 
 
-# ---------------------------------------------------------------- commands
-def plan(story: dict, budget: float) -> None:
-    w, h = story["keyframe_size"]
+# ---------------------------------------------------------------- commands without API calls
+def plan(story: dict, budget: float) -> int:
+    sz = sizes(story)
     tier = story["image_tier"]
     refs = ref_items(story)
-    ref_cost = sum(sw * sh / 1e6 * IMAGE_PER_MP[tier] for _, _, _, (sw, sh) in refs)
-    kf_cost = len(story["shots"]) * w * h / 1e6 * IMAGE_PER_MP[tier]
+    ref_cost = sum(w * h / 1e6 * IMAGE_PER_MP[tier] for _, _, _, (w, h) in refs)
+    n_last = sum(1 for s in story["shots"] if s.get("last_frame"))
+    kw, kh = sz["keyframe"]
+    kf_cost = (len(story["shots"]) + n_last) * kw * kh / 1e6 * IMAGE_PER_MP[tier]
     secs = sum(float(s.get("duration", 6)) for s in story["shots"])
-    print(f"{story['title']}: {len(story['shots'])} shots, {secs:.0f} s, {story['aspect_ratio']}\n")
+    print(f"{story['title']}: {len(story['shots'])} shots, {secs:.0f} s of clips, {story['aspect_ratio']}\n")
     for s in story["shots"]:
-        line = f'{story["characters"][s["speaker"]]["name"]}: "{s["line"]}"' if s.get("line") else "(no dialogue)"
-        print(f"  {s['id']}  {s['location']:<9} {','.join(s.get('characters', [])):<10} {s['shot']:<22} {line}")
+        line = ""
+        if s.get("line"):
+            who = story["characters"][s["speaker"]]
+            line = f'{who["name"]}{" (V.O.)" if who.get("vo") else ""}: "{s["line"][:60]}{"…" if len(s["line"]) > 60 else ""}"'
+        extra = " +last frame" if s.get("last_frame") else ""
+        print(f"  {s['id']:<6} {s.get('scene', ''):<4} {float(s.get('duration', 6)):>4.0f}s  {s['shot'][:24]:<24} {line}{extra}")
+    print(f"\nreference sheets: {', '.join(k for k, *_ in refs)}")
     print(f"\nestimated cost (nunchux.ai/pricing, 2026-11-23):")
-    print(f"  {len(refs)} reference sheets        ${ref_cost:.2f}")
-    print(f"  {len(story['shots'])} keyframes             ${kf_cost:.2f}")
+    print(f"  {len(refs)} reference sheets                ${ref_cost:.2f}")
+    print(f"  {len(story['shots'])} first frames + {n_last} last frames     ${kf_cost:.2f}")
     for name, cfg in PASSES.items():
         c = VIDEO_PER_S[(cfg["tier"], cfg["short_edge"])] * secs
-        print(f"  clips, {name:<5} ({cfg['short_edge']}p, {cfg['tier']})  ${c:.2f}")
-    draft = VIDEO_PER_S[(PASSES['draft']['tier'], 480)] * secs
-    final = VIDEO_PER_S[(PASSES['final']['tier'], 768)] * secs
+        print(f"  clips, {name:<5} ({cfg['short_edge']}p, {cfg['tier']:<13})  ${c:.2f}")
+    draft = VIDEO_PER_S[(PASSES["draft"]["tier"], 480)] * secs
+    final = VIDEO_PER_S[(PASSES["final"]["tier"], 768)] * secs
     print(f"\n  one draft + one final, before re-rolls: ${ref_cost + kf_cost + draft + final:.2f}   (budget ${budget:.2f})")
+    problems = check_story(story)
+    for p in problems:
+        print(f"  ! {p}")
+    return 1 if problems else 0
+
+
+def requests_preview(story: dict, man: Manifest, pass_: str) -> Path:
+    """Every request body a full run would send, with references shown as file names instead of base64."""
+    tier = story["image_tier"]
+    w, h = story["keyframe_size"]
+    cfg = PASSES[pass_]
+    calls = []
+    for key, kind, prompt, (rw, rh) in ref_items(story):
+        calls.append({"step": "ref", "item": key, "POST": f"{API}/v1/images/generations",
+                      "body": image_body(prompt, rw, rh, tier, seed_for(story, key, 0))})
+    for s in story["shots"]:
+        refs = shot_refs(story, s)
+        calls.append({"step": "keyframe", "item": s["id"], "POST": f"{API}/v1/images/edits",
+                      "body": edit_body(keyframe_prompt(story, s), [f"<data URI of refs/{k.replace(':', '-')}.jpg>"
+                                                                     for k in refs], w, h, tier,
+                                        seed_for(story, f"keyframe:{s['id']}", 0))})
+        if s.get("last_frame"):
+            calls.append({"step": "lastframe", "item": s["id"], "POST": f"{API}/v1/images/edits",
+                          "body": edit_body(last_frame_prompt(story, s), [f"<data URI of keyframes/{s['id']}.jpg>"],
+                                            w, h, tier, seed_for(story, f"keyframe:{s['id']}:last", 0))})
+    for s in story["shots"]:
+        calls.append({"step": "clip", "item": s["id"], "POST": f"{API}/v1/videos/generations",
+                      "body": video_body(clip_prompt(story, s, bool(s.get("last_frame"))),
+                                         f"<URL of keyframe {s['id']}>",
+                                         f"<URL of last frame {s['id']}>" if s.get("last_frame") else None,
+                                         float(s.get("duration", 6)), cfg["short_edge"], story["aspect_ratio"],
+                                         cfg["tier"], seed_for(story, f"clip:{s['id']}", 0))})
+    out = OUT / "requests.preview.json"
+    out.write_text(json.dumps({"story": story["title"], "pass": pass_, "headers": {"X-API-Key": "<NUNCHUX_API_KEY>",
+                               "Content-Type": "application/json"}, "calls": calls}, indent=2, ensure_ascii=False),
+                   encoding="utf-8")
+    return out
+
+
+def review_page(story: dict, man: Manifest) -> Path:
+    """A local page with every reference, frame, prompt and clip (with sound), to look and listen before going on."""
+    e = lambda s: html.escape(str(s or ""))  # noqa: E731
+    ar = story["aspect_ratio"].replace(":", " / ")
+    parts = [f"<!doctype html><meta charset=utf-8><title>{e(story['title'])} · review</title>",
+             "<style>body{font:14px/1.5 system-ui;background:#111;color:#eee;margin:24px}"
+             "h2{margin-top:32px}.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}"
+             f"img,video{{width:100%;aspect-ratio:{ar};object-fit:contain;background:#000;border-radius:6px}}"
+             ".ref img{aspect-ratio:auto}p{margin:6px 0;color:#aaa}b{color:#fff}details{color:#888}</style>",
+             f"<h1>{e(story['title'])}</h1>", "<h2>Reference sheets</h2><div class='g ref'>"]
+    for key, entry in man.data["refs"].items():
+        parts.append(f"<div><img src='{e(entry['jpg'])}'><p><b>{e(key)}</b> · attempt {entry['attempt']}</p>"
+                     f"<details><summary>prompt</summary>{e(entry['prompt'])}</details></div>")
+    parts.append("</div>")
+    for s in story["shots"]:
+        kf = man.get("keyframes", s["id"])
+        last = man.get("keyframes", f"{s['id']}:last")
+        who = story["characters"].get(s.get("speaker", ""), {})
+        line = f"<p><b>{e(who.get('name'))}{' (V.O.)' if who.get('vo') else ''}</b>: {e(s.get('line'))}</p>" if s.get("line") else ""
+        parts.append(f"<h2>{e(s['id'])} · {e(s.get('scene'))} · {e(s['shot'])} · {s.get('duration', 6)} s</h2>{line}<div class='g'>")
+        if kf:
+            parts.append(f"<div><img src='{e(kf['jpg'])}'><p>first frame · attempt {kf['attempt']}</p>"
+                         f"<details><summary>prompt</summary>{e(kf['prompt'])}</details></div>")
+        if last:
+            parts.append(f"<div><img src='{e(last['jpg'])}'><p>last frame · attempt {last['attempt']}</p></div>")
+        for p in PASSES:
+            c = man.get("clips", s["id"], p)
+            if c:
+                parts.append(f"<div><video src='{e(c['file'])}' controls preload=metadata></video>"
+                             f"<p>{p} clip · attempt {c['attempt']}</p>"
+                             f"<details><summary>prompt</summary>{e(c['prompt'])}</details></div>")
+        parts.append("</div>")
+    for p, f in man.data["films"].items():
+        parts.append(f"<h2>Film · {p}</h2><video src='{e(f['file'])}' controls style='max-width:960px'></video>")
+    out = OUT / "review.html"
+    out.write_text("".join(parts), encoding="utf-8")
+    return out
+
+
+# ---------------------------------------------------------------- main
+COMMANDS = ["plan", "requests", "credits", "refs", "keyframes", "voices", "clips", "assemble", "review", "all"]
 
 
 def main(argv=None) -> int:
     global OUT
     load_env()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("command", choices=["plan", "refs", "keyframes", "clips", "assemble", "all", "credits"])
+    ap.add_argument("command", choices=COMMANDS)
+    ap.add_argument("--story", type=Path, default=Path(os.environ.get("STORY", DEFAULT_STORY)))
     ap.add_argument("--pass", dest="pass_", choices=list(PASSES), default="draft")
     ap.add_argument("--shots", default="", help="comma-separated shot ids (default: all)")
     ap.add_argument("--redo", nargs="?", const="*", default="",
-                    help="draw again with a new seed: the selected shots, or for refs a list like character:mei")
+                    help="draw again with a new seed: the selected shots, or for refs keys like character:clerk")
     ap.add_argument("--budget", type=float, default=float(os.environ.get("BUDGET_USD", "8")))
     ap.add_argument("--workers", type=int, default=4, help="requests at a time (the free tier allows 5)")
     ap.add_argument("--music", type=Path, help="an audio file to lay under the film at low volume")
-    ap.add_argument("--story", type=Path, default=ROOT / "story.json")
     ap.add_argument("--dry-run", action="store_true", help="placeholder media, no API key, no cost")
     a = ap.parse_args(argv)
 
     story = json.loads(a.story.read_text(encoding="utf-8"))
     if a.command == "plan":
-        plan(story, a.budget)
-        return 0
-    OUT = ROOT / ("out-dryrun" if a.dry_run else "out")
+        return plan(story, a.budget)
+    OUT = ROOT / ("out-dryrun" if a.dry_run else "out") / slug(story["title"])
     OUT.mkdir(parents=True, exist_ok=True)
+    man = Manifest(OUT / "manifest.json")
+    if a.command == "requests":
+        print(f"wrote {requests_preview(story, man, a.pass_)}")
+        return 0
+    if a.command == "review":
+        print(f"open {review_page(story, man)}")
+        return 0
     if a.dry_run:
         provider = DryRun(OUT / "_dry")
     else:
@@ -825,36 +1099,58 @@ def main(argv=None) -> int:
     if a.command == "credits":
         print(json.dumps(provider.credits(), indent=2))
         return 0
+    problems = check_story(story)
+    if problems:
+        print("fix the story first:\n  " + "\n  ".join(problems), file=sys.stderr)
+        return 2
     ledger = Ledger(OUT / "receipts.jsonl", a.budget)
-    film = Film(story, provider, ledger, Manifest(OUT / "manifest.json"), a.workers)
+    film = Film(story, provider, ledger, man, a.workers)
     ids = [s for s in a.shots.split(",") if s] or [s["id"] for s in story["shots"]]
     unknown = [s for s in ids if s not in film.shots]
     if unknown:
         print(f"unknown shot ids: {', '.join(unknown)}", file=sys.stderr)
         return 2
-    # --redo alone: everything selected; --redo character:mei,location:cafe: those reference sheets
     redo_shots = bool(a.redo)
     redo_refs = {k for k in a.redo.split(",") if ":" in k}
     if a.redo == "*" and a.command == "refs":
         redo_refs = {it[0] for it in ref_items(story)}
     font("text"), font("title")   # copy the fonts once, before any threads start
-    log(f"spent so far (estimated): ${ledger.spent:.2f} of ${a.budget:.2f}" + ("  [dry run]" if a.dry_run else ""))
+    log(f"{story['title']} · spent so far (estimated): ${ledger.spent:.2f} of ${a.budget:.2f}"
+        + ("  [dry run]" if a.dry_run else ""))
 
     failed: list[str] = []
     t0 = time.time()
+    before = provider.credits()
+
+    def note_balance() -> None:
+        """The account balance before and after each command: what the receipts estimate, the account measures."""
+        after = provider.credits()
+        man.data.setdefault("balance", []).append({"cmd": a.command, "pass": a.pass_, "ts": now_iso(),
+                                                    "before": before.get("credits_remaining"),
+                                                    "after": after.get("credits_remaining")})
+        man.save()
+        if isinstance(before.get("credits_remaining"), (int, float)) and isinstance(after.get("credits_remaining"), (int, float)):
+            log(f"balance: ${before['credits_remaining']:.4f} → ${after['credits_remaining']:.4f} "
+                f"(measured ${before['credits_remaining'] - after['credits_remaining']:.4f})")
     try:
         if a.command == "refs":
             failed = film.refs(redo_refs)
         elif a.command == "keyframes":
             failed = film.keyframes(ids, redo_shots)
+        elif a.command == "voices":
+            vids = [i for i in film.voice_shots() if not a.shots or i in ids]
+            log(f"voices: {', '.join(vids)} (draft clips; listen in review.html)")
+            failed = film.keyframes(vids, False) or film.clips("draft", vids, redo_shots)
+            log(f"open {review_page(story, man)}")
         elif a.command == "clips":
             failed = film.clips(a.pass_, ids, redo_shots)
         elif a.command == "assemble":
             film.assemble(a.pass_, a.music)
         elif a.command == "all":
             run_row = {"pass": a.pass_, "started": now_iso(), "credits_before": provider.credits()}
-            ok_clips = lambda: sum(1 for r in ledger.rows() if r["step"] == "clip" and r.get("pass") == a.pass_  # noqa: E731
-                                   and r.get("status") == "ok")
+            def ok_clips() -> int:
+                return sum(1 for r in ledger.rows() if r["step"] == "clip" and r.get("pass") == a.pass_
+                           and r.get("status") == "ok")
             before = ok_clips()
             failed = film.refs(set()) or film.keyframes(ids, False) or film.clips(a.pass_, ids, redo_shots)
             run_row["render_seconds"] = round(time.time() - t0, 1)
@@ -869,9 +1165,12 @@ def main(argv=None) -> int:
                 run_row["credits_after"] = provider.credits()
                 run_row["total_seconds"] = round(time.time() - t0, 1)
                 film.m.save()
+            review_page(story, man)
     except (BudgetExceeded, RuntimeError, ApiError) as e:
         log(f"stopped: {e}")
+        note_balance()
         return 1
+    note_balance()
     log(f"done in {time.time() - t0:.0f} s · spent so far (estimated): ${ledger.spent:.2f}")
     return 1 if failed else 0
 

@@ -1,0 +1,479 @@
+{
+  "title": "The Rental Booking Paradox",
+  "subtitle": "Episode 1",
+  "logline": "Her rental car was confirmed two weeks ago, and the counter has none. The ride that rescues her is the same company's car, and its odometer explains why.",
+  "aspect_ratio": "16:9",
+  "output_size": [
+    1280,
+    720
+  ],
+  "keyframe_size": [
+    1280,
+    720
+  ],
+  "sheet_size": [
+    1536,
+    864
+  ],
+  "prop_size": [
+    1536,
+    864
+  ],
+  "location_size": [
+    1280,
+    720
+  ],
+  "image_tier": "radical_speed",
+  "seed": 20261124,
+  "burn_subtitles": true,
+  "style": "Photoreal live-action film frame, contemporary Los Angeles, intimate observational realism, soft natural mixed light, muted warm-neutral palette (warm beige and cream, muted olive and dusty navy accents, soft charcoal shadows), subtle fine film texture, natural skin texture, believable exposure.",
+  "avoid": "Photoreal live action, not animation, illustration, CGI or a 3D render. No captions, subtitles or watermarks; no real brand logos; no extra people; natural hands and anatomy.",
+  "clip_audio": "No background music or score: only ambient sound, action sounds and voices.",
+  "credits": {
+    "author": "wyy511511",
+    "repo": "https://github.com/wyy511511/MinDrama"
+  },
+  "characters": {
+    "traveler": {
+      "name": "Traveler",
+      "look": "Woman, mid-twenties (she looks about 25, with a youthful face), mixed-heritage American, about 165 cm, slim light athletic build. Oval face with a softly pointed chin, high rounded cheekbones, almond eyes set slightly wide, straight nose with a small rounded tip, full lower lip, straight medium-thick brows. Dark brown-black straight shoulder-length bob, deep side part on the left, front strands tucked behind the right ear. Dark brown eyes. Warm tan skin, a small mole under the left eye; light natural makeup, natural lip color. No glasses, no bangs, no earrings, no jewelry, no tattoos, no hat.",
+      "outfit": "a coral-orange lightweight hip-length zip jacket with two side slit pockets, worn open over a plain cream crew-neck T-shirt; dark navy straight-leg trousers; dark charcoal low sneakers",
+      "voice": "a clear voice of a woman in her mid-twenties, slightly husky after a long flight",
+      "pose": "one hand lightly in a jacket side pocket with the thumb out"
+    },
+    "clerk": {
+      "name": "Clerk",
+      "look": "Man, early thirties, East Asian American, about 175 cm, lean average build. Rectangular face with a flat defined jaw, broad forehead, narrow monolid eyes, low straight brows, medium nose with a wide bridge, thin lips. Black short hair, neatly combed side part on the right, tidy tapered sides. Dark brown eyes. Light olive skin, clean-shaven. No glasses, no beard, no earrings, no tattoos, no hat.",
+      "outfit": "a fitted dark navy blazer over a white button-up shirt with a plain dark navy tie, a small yellow square pin with a dark capital H on the left lapel; charcoal slacks; black leather shoes",
+      "voice": "a steady, low, unhurried voice of a man in his early thirties who never raises it",
+      "pose": "one hand lightly pinching the opposite blazer cuff"
+    },
+    "driver": {
+      "name": "Driver",
+      "look": "Man, late forties, Latino American, about 178 cm, solid broad-shouldered build with a slight belly. Round-square face with full cheeks, deep smile lines, heavy-lidded wide-set eyes, broad nose, thick dark brows, neatly trimmed salt-and-pepper mustache. Black hair with grey at the temples, short, combed back. Dark brown eyes. Medium brown sun-weathered skin. No glasses, no sunglasses, no full beard, no earrings, no tattoos, no hat.",
+      "outfit": "a light blue short-sleeve chambray button shirt, untucked, loose sleeves; dark wash straight jeans with front pockets; tan work sneakers",
+      "voice": "a warm, relaxed baritone that talks about the car like an old colleague and calls her she",
+      "pose": "one hand lightly in a front jeans pocket with the thumb out"
+    },
+    "narrator": {
+      "name": "Narrator",
+      "vo": true,
+      "voice": "a crisp, warm voice of a woman in her forties with a hint of a teasing smile, like a clever friend leaning in to explain"
+    }
+  },
+  "props": {
+    "sedan": {
+      "name": "The yellow H sedan",
+      "look": "A contemporary compact four-door sedan with a low roofline, not an SUV. Warm golden-yellow paint; the roof is sun-faded to a noticeably paler, chalky yellow, clearly visible in the three-quarter view. The same three-box four-door sedan body with a separate trunk in all three panels, never a hatchback. A smooth plain front grille and a plain trunk lid with no emblem, badge or lettering. Blue-grey tinted windows, dark grey alloy wheels, clear headlights, coral-red taillights, blank license plates with no characters, no roof rack, no taxi sign",
+      "marks": "one small square H badge (a yellow square with a dark capital H) on the driver-side front door, and nothing else"
+    },
+    "phone": {
+      "name": "Her phone",
+      "look": "A contemporary slim slab smartphone. Front: the whole screen is off and blank, thin black bezel, no icons. Back: matte graphite-black body with a single camera bump in the top-left corner, no logo or text. A soft silver metal frame, one side button on the right edge, no case"
+    },
+    "suitcase": {
+      "name": "The teal suitcase",
+      "look": "A medium teal hard-shell rolling suitcase with vertical ridges, a black telescoping handle and four black spinner wheels, no logo or text"
+    }
+  },
+  "locations": {
+    "counter": {
+      "name": "Airport Rental Counter",
+      "look": "The H rental area of a 2020s Los Angeles airport rental center: a long glossy bright-yellow service counter across the middle of the frame; on the wall behind it one large H sign (a yellow square with a dark capital H), the only logo; a black thin-bezel flat monitor at the right end of the counter with a blank screen; a chrome queue stanchion with a navy belt at the front left; a floor-to-ceiling glass wall on the right letting in bright California daylight; a light grey polished floor. Only these fixtures: no other furniture, seats, posters or luggage carts",
+      "light": "Daytime: bright warm-white daylight slants in from the glass wall on the right, cool white ceiling light fills in, soft reflections on the floor."
+    },
+    "curb": {
+      "name": "Airport Curb",
+      "look": "The arrivals-level pickup curb of a 2020s Los Angeles airport: a wide light concrete sidewalk with the rental center's glass entrance doors behind, with no signs or lettering above them; on the left a row of three tall palm trees in square concrete planters along the curb; on the right two square grey concrete columns holding up the elevated roadway above, shading the right half; in the foreground an empty asphalt pickup lane with white curb markings; no traffic cones, no luggage, no other vehicles",
+      "light": "Afternoon: hard warm-white California sun from the upper left, crisp palm shadows on the sidewalk, cooler blue shade under the elevated road on the right."
+    },
+    "highway": {
+      "name": "California Coastal Highway",
+      "look": "A two-lane Southern California coastal highway: dark asphalt with a double yellow center line curving gently toward the horizon; the Pacific Ocean and a white metal guardrail on the left; dry golden grass slopes and low coastal bluffs on the right; no other cars, no road signs, no billboards, no buildings",
+      "light": "Sunset: a low apricot sun just above the sea straight ahead, soft backlight along the road, pale grey-green shadows; soft, never a harsh golden glare."
+    }
+  },
+  "shots": [
+    {
+      "id": "e1s01",
+      "scene": "1-1",
+      "location": "counter",
+      "characters": [
+        "traveler",
+        "clerk"
+      ],
+      "props": [
+        "phone",
+        "suitcase"
+      ],
+      "shot": "medium-wide establishing shot",
+      "camera": "slow push-in",
+      "duration": 4,
+      "frame": "Traveler stands in the left foreground in front of the yellow H counter, filling about two thirds of the frame height, her coral jacket creased from the long flight, the teal suitcase standing on the floor beside her; Clerk stands behind the counter on the right with the H sign wall behind him; her arm reaches across the counter holding her phone out toward him, the screen facing him and reading CONFIRMED",
+      "action": "Traveler holds her phone out across the counter toward Clerk, the screen showing CONFIRMED, in one continuous move",
+      "sound": "the low murmur of the airport rental hall, a distant PA announcement echoing",
+      "text": "CONFIRMED on the phone screen and the H on the sign"
+    },
+    {
+      "id": "e1s02",
+      "scene": "1-1",
+      "location": "counter",
+      "characters": [
+        "traveler"
+      ],
+      "props": [
+        "phone"
+      ],
+      "shot": "close-up",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Close-up of Traveler at the yellow counter holding her phone up over it, her eyes fixed on Clerk just off-screen to the right",
+      "action": "Her wrist pushes the phone forward first, then her chin lifts, her eyes locked on Clerk",
+      "speaker": "traveler",
+      "line": "I booked this two weeks ago!",
+      "delivery": "impatient, fast",
+      "sound": "the rental hall murmur"
+    },
+    {
+      "id": "e1s03",
+      "scene": "1-1",
+      "location": "counter",
+      "characters": [
+        "clerk"
+      ],
+      "props": [],
+      "shot": "close-up",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Close-up of Clerk behind the yellow counter, both hands flat on the counter, the H sign wall softly behind him",
+      "action": "His eyes move from her phone screen back to her face; his mouth stays level, he presses his lower lip together briefly, then speaks",
+      "speaker": "clerk",
+      "line": "Sorry. We have no cars.",
+      "delivery": "calm",
+      "sound": "the rental hall murmur",
+      "text": "the H on the sign behind him"
+    },
+    {
+      "id": "e1s04",
+      "scene": "1-1",
+      "location": "counter",
+      "characters": [
+        "traveler",
+        "clerk"
+      ],
+      "props": [
+        "phone"
+      ],
+      "shot": "close-up",
+      "camera": "slow push-in",
+      "duration": 13,
+      "frame": "Close-up of Traveler at the counter, her hand with the phone hovering in mid-air, her brow tightening; in the soft background on the right, Clerk rests one hand on the edge of the monitor at the right end of the counter",
+      "action": "Her hand hangs in mid-air, then lowers a beat behind her gaze to rest on the counter edge; short quick breaths, her brow tightens, her eyes flick between Clerk and the H sign wall; the camera slowly pushes in on her face",
+      "speaker": "narrator",
+      "line": "Rental companies plan around expected returns, not a specific car waiting for you. One late return, one car in the shop, one at the wrong branch—and three expected cars become zero.",
+      "sound": "the rental hall murmur, the light tap of the phone on the counter, a soft knock as Clerk's hand settles on the monitor edge",
+      "text": "the H on the sign"
+    },
+    {
+      "id": "e1s05",
+      "scene": "1-1",
+      "location": "counter",
+      "characters": [
+        "clerk"
+      ],
+      "props": [],
+      "shot": "insert close-up",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Insert close-up of the black thin-bezel monitor at the right end of the yellow counter, Clerk's hand resting on its edge; the screen shows one large number 3",
+      "last_frame": "Change only the monitor: it is now turned further toward the left and its screen shows one large number 0",
+      "action": "Clerk's hand turns the monitor toward Traveler on the left; the large number on the screen drops from 3 to 0, in one smooth move",
+      "sound": "the soft creak of the monitor stand turning",
+      "text": "the number on the monitor screen"
+    },
+    {
+      "id": "e1s06",
+      "scene": "1-1",
+      "location": "counter",
+      "characters": [
+        "traveler"
+      ],
+      "props": [
+        "phone"
+      ],
+      "shot": "close-up",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Close-up of Traveler at the counter, gripping her phone at the counter edge, looking up",
+      "action": "Her eyes lift from the monitor back to Clerk's face; her hand tightens around the phone at the counter edge first, then her upper body leans forward",
+      "speaker": "traveler",
+      "line": "Then upgrade me. Or downgrade me.",
+      "delivery": "pressing, fast",
+      "sound": "the rental hall murmur"
+    },
+    {
+      "id": "e1s07",
+      "scene": "1-1",
+      "location": "counter",
+      "characters": [
+        "clerk"
+      ],
+      "props": [],
+      "shot": "close-up",
+      "camera": "static",
+      "duration": 6,
+      "frame": "Close-up of Clerk behind the counter, one hand on the monitor at the right end of the counter, the H sign wall behind him",
+      "action": "He turns the monitor back to its original position, returns both hands to the counter, and gives one small nod of the chin on the word may; his tone stays level",
+      "speaker": "clerk",
+      "line": "Both are gone. If you wait two hours, you may get compensation.",
+      "delivery": "level, careful",
+      "sound": "the rental hall murmur, the monitor stand turning",
+      "text": "the H on the sign behind him"
+    },
+    {
+      "id": "e1s08",
+      "scene": "1-1",
+      "location": "counter",
+      "characters": [
+        "traveler"
+      ],
+      "props": [
+        "phone"
+      ],
+      "shot": "insert close-up",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Insert close-up of Traveler's hand holding her phone above the yellow counter; the screen shows a row of rental app tiles, each reading NO CARS, and a near-black square icon with a white car symbol labeled RIDE",
+      "action": "Her thumb swipes across the row of rival rental apps, each showing NO CARS, pauses for a beat, then taps the near-black RIDE icon, at normal speed",
+      "sound": "soft taps of a thumb on the phone screen, the rental hall murmur",
+      "text": "NO CARS on the app tiles and RIDE under the dark icon"
+    },
+    {
+      "id": "e1s09",
+      "scene": "1-2",
+      "location": "curb",
+      "characters": [
+        "traveler"
+      ],
+      "props": [
+        "suitcase",
+        "phone",
+        "sedan"
+      ],
+      "shot": "wide establishing shot",
+      "camera": "static",
+      "duration": 5,
+      "frame": "Wide shot of the sunny airport pickup curb: Traveler stands at the edge of the sidewalk on the right, filling about half the frame height, the teal suitcase beside her, phone in hand, looking down the lane; far in the left background the small yellow H sedan is just entering the pickup lane",
+      "last_frame": "Change only the car: the small yellow sedan has now pulled up and stopped in the pickup lane right in front of Traveler, its driver-side door with the H badge facing her",
+      "action": "The yellow sedan drives in from the left background, slows down and stops right in front of Traveler, its driver-side door with the H badge facing her",
+      "sound": "airport curb traffic, a distant horn, tires slowing to a stop",
+      "text": "the H badge on the car door; the license plates stay blank"
+    },
+    {
+      "id": "e1s10",
+      "scene": "1-2",
+      "location": "curb",
+      "characters": [
+        "traveler"
+      ],
+      "props": [],
+      "shot": "close-up",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Close-up of Traveler on the sunny sidewalk, looking down at the H badge on the yellow car door just below the frame",
+      "action": "Her eyes land on the H badge on the car door first, then her head tilts slightly and one eyebrow rises",
+      "speaker": "traveler",
+      "line": "That's an H car.",
+      "delivery": "puzzled, slower",
+      "sound": "curb traffic"
+    },
+    {
+      "id": "e1s11",
+      "scene": "1-2",
+      "location": "curb",
+      "characters": [
+        "driver",
+        "traveler"
+      ],
+      "props": [
+        "sedan"
+      ],
+      "shot": "medium close-up",
+      "camera": "static",
+      "duration": 9,
+      "frame": "Driver leans out of the lowered driver's window of the yellow H sedan, one arm resting on the window frame, smiling with deep smile lines; Traveler stands at the right edge of the frame on the sidewalk",
+      "action": "Driver smiles first, then pats the H badge on the door twice with his palm and opens his hand on the word nothing; Traveler's eyes follow his hand",
+      "speaker": "driver",
+      "line": "I rent this car from H through their rideshare driver program. A car sitting in the lot earns them nothing.",
+      "delivery": "easy, leaning out the window",
+      "sound": "curb traffic, the electric hum of the window, two dull pats on the car door",
+      "text": "the H badge on the car door"
+    },
+    {
+      "id": "e1s12",
+      "scene": "1-2",
+      "location": "curb",
+      "characters": [
+        "traveler"
+      ],
+      "props": [
+        "sedan"
+      ],
+      "shot": "close-up",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Close-up of Traveler beside the yellow car's window, glancing along the car's body with a curious half-smile",
+      "action": "Her gaze moves from Driver's open hand to the car body, her head tilts and the corner of her mouth lifts with curiosity",
+      "speaker": "traveler",
+      "line": "So what happens when she gets too old?",
+      "delivery": "curious, a little dry",
+      "sound": "curb traffic"
+    },
+    {
+      "id": "e1s13",
+      "scene": "1-2",
+      "location": "curb",
+      "characters": [
+        "driver"
+      ],
+      "props": [
+        "sedan"
+      ],
+      "location_ref": false,
+      "shot": "insert close-up",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Insert close-up of the yellow sedan's dashboard behind the steering wheel, Driver's fingers resting near the odometer, which clearly reads 70,000",
+      "action": "Driver's fingers tap the dashboard twice; the odometer clearly reads 70,000, at normal speed",
+      "sound": "two light taps on the dashboard",
+      "text": "70,000 on the odometer"
+    },
+    {
+      "id": "e1s14",
+      "scene": "1-2",
+      "location": "curb",
+      "characters": [
+        "driver"
+      ],
+      "props": [
+        "sedan"
+      ],
+      "shot": "close-up",
+      "camera": "static",
+      "duration": 8,
+      "frame": "Close-up of Driver in the driver's seat of the yellow sedan, one hand back on the steering wheel, turning his face toward the open window",
+      "action": "He looks out of the window at Traveler, his smile lines deepen first, then he speaks as if praising an old colleague",
+      "speaker": "driver",
+      "line": "She had two hundred miles when I got her. Soon H sells her, while she's still worth something.",
+      "delivery": "warm, proud",
+      "sound": "curb traffic"
+    },
+    {
+      "id": "e1s15",
+      "scene": "1-2",
+      "location": "curb",
+      "characters": [
+        "traveler"
+      ],
+      "props": [
+        "phone"
+      ],
+      "shot": "over-the-shoulder insert",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Over-the-shoulder close-up of Traveler's phone in her hand: the screen is filled with rows of photos of yellow H sedans, each tagged FOR SALE; her face soft in the background",
+      "action": "She scrolls the FOR SALE listings; her lips relax first, then lift into a smile",
+      "sound": "curb traffic",
+      "text": "FOR SALE on the listings and the H badges in the photos"
+    },
+    {
+      "id": "e1s16",
+      "scene": "1-2",
+      "location": "curb",
+      "characters": [
+        "traveler"
+      ],
+      "props": [
+        "suitcase",
+        "sedan"
+      ],
+      "shot": "medium shot",
+      "camera": "static",
+      "duration": 6,
+      "frame": "Medium shot at the back of the yellow sedan in the sun: the trunk lid is popped open; Traveler, her phone tucked into her jacket side pocket, lifts the teal suitcase toward the open trunk; the sun-faded pale roof is clearly visible",
+      "action": "Traveler lifts the teal suitcase and sets it into the open trunk in one smooth motion",
+      "sound": "the trunk lid popping, the dull thud of the suitcase landing in the trunk",
+      "text": "the license plate stays blank"
+    },
+    {
+      "id": "e1s17",
+      "scene": "1-2",
+      "location": "curb",
+      "characters": [
+        "traveler"
+      ],
+      "props": [
+        "sedan"
+      ],
+      "shot": "medium shot",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Medium shot of Traveler at the rear of the yellow sedan, her hand on the open trunk lid, the suitcase inside",
+      "action": "She presses the trunk lid closed, walks to the rear door, opens it and gets into the back seat, at normal speed",
+      "sound": "the trunk closing, the rear door opening and shutting",
+      "text": "the license plate stays blank"
+    },
+    {
+      "id": "e1s18",
+      "scene": "1-3",
+      "location": "highway",
+      "characters": [],
+      "props": [
+        "sedan"
+      ],
+      "shot": "wide establishing shot",
+      "camera": "static",
+      "duration": 4,
+      "frame": "Wide shot of the coastal highway at sunset: the small yellow sedan drives away along the lane beside the double yellow line, about one eighth of the frame width; the Pacific and the white guardrail on the left, golden dry grass and low bluffs on the right; the people inside are too small to see",
+      "action": "The yellow sedan drives away down the road toward the low sun",
+      "sound": "tires on asphalt, waves and sea wind"
+    },
+    {
+      "id": "e1s19",
+      "scene": "1-3",
+      "location": "highway",
+      "characters": [
+        "traveler",
+        "driver"
+      ],
+      "props": [],
+      "location_ref": false,
+      "shot": "close-up inside the car",
+      "camera": "static",
+      "duration": 6,
+      "frame": "Inside the yellow sedan at sunset: Traveler sits in the back seat on the right, her head resting against the window glass, warm apricot light on the side of her face; Driver in the left foreground in the driver's seat shows only his shoulder and the back of his head, his eyes visible in the rear-view mirror",
+      "action": "Traveler's shoulders relax and her breathing slows; Driver glances up at her in the rear-view mirror, the corner of his mouth rises, one hand still on the wheel",
+      "speaker": "driver",
+      "line": "Safe travels!",
+      "delivery": "light, cheerful",
+      "sound": "a steady tire hum, quiet air conditioning"
+    },
+    {
+      "id": "e1s20",
+      "scene": "1-3",
+      "location": "highway",
+      "characters": [],
+      "props": [
+        "sedan"
+      ],
+      "shot": "extreme wide shot",
+      "camera": "slow push-in",
+      "duration": 11,
+      "frame": "Extreme wide shot of the coastal highway curving toward the horizon at sunset: the tiny yellow sedan heads toward the low apricot sun above the sea, about one fifteenth of the frame width; waves beyond the guardrail on the left, dry grass swaying on the right",
+      "action": "The yellow sedan drives on toward the low apricot sun, growing smaller; waves roll beyond the guardrail and the grass sways in the wind; the camera slowly pushes in",
+      "speaker": "narrator",
+      "line": "Next time, add your flight number so the rental desk can track delays. Check the pickup terms, and keep a backup ride in mind.",
+      "sound": "waves and sea wind, a distant tire hum"
+    }
+  ]
+}
