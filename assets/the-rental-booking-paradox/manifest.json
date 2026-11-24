@@ -321,6 +321,174 @@
       "prompt": "Image 1 is the first frame. Her hand hangs in mid-air, then lowers a beat behind her gaze to rest on the counter edge; short quick breaths, her brow tightens, her eyes flick between Clerk and the H sign wall; the camera slowly pushes in on her face. Camera: slow push-in. An off-screen narrator who never appears, in a crisp, warm voice of a woman in her forties with a hint of a teasing smile, like a clever friend leaning in to explain, says: \"Rental companies plan around expected returns, not a specific car waiting for you. One late return, one car in the shop, one at the wrong branch—and three expected cars become zero.\" No one on screen speaks; every mouth stays closed. Sound: the rental hall murmur, the light tap of the phone on the counter, a soft knock as Clerk's hand settles on the monitor edge. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
       "earlier_attempts": [],
       "made": "2026-11-23T20:52:20-0800"
+    },
+    "final/e1s08": {
+      "file": "clips/final/e1s08.mp4",
+      "attempt": 0,
+      "seed": 886418,
+      "prompt": "Image 1 is the first frame. Her thumb swipes past the red, the black-and-green and the blue app, each showing NO CARS, pauses for a beat, then taps the near-black RIDE icon, at normal speed. Camera: static. No one speaks. Sound: soft taps of a thumb on the phone screen, the rental hall murmur. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:43:37-0800"
+    },
+    "final/e1s08b": {
+      "file": "clips/final/e1s08b.mp4",
+      "attempt": 0,
+      "seed": 485415,
+      "prompt": "Image 1 is the first frame. Her thumb taps Priority Pickup, then taps the black Confirm button; the driver card reads 3 min away, at normal speed. Camera: static. No one speaks. Sound: soft taps on the phone screen, the rental hall murmur. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:43:38-0800"
+    },
+    "final/e1s09": {
+      "file": "clips/final/e1s09.mp4",
+      "attempt": 0,
+      "seed": 136838,
+      "prompt": "Image 1 is the first frame. Image 2 is the last frame; end exactly on it. Traveler waits on the sidewalk at the curb, looking down the empty lane; the yellow H sedan drives in along the asphalt lane from the left background, slows down and stops alongside the curb right in front of her. Camera: static. No one speaks. Sound: airport curb traffic, a distant horn, tires slowing to a stop. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:43:39-0800"
+    },
+    "final/e1s15": {
+      "file": "clips/final/e1s15.mp4",
+      "attempt": 0,
+      "seed": 79900,
+      "prompt": "Image 1 is the first frame. Her thumb scrolls the H Car Sales listings; a small amused breath, then she speaks, her face out of frame. Camera: static. Traveler (amused, realizing), in a clear voice of a woman in her mid-twenties, slightly husky after a long flight, says: \"Oh, true. H sells lots of its cars on H Car Sales.\" Only Traveler speaks. Sound: curb traffic. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:43:41-0800"
+    },
+    "final/e1s03": {
+      "file": "clips/final/e1s03.mp4",
+      "attempt": 0,
+      "seed": 587010,
+      "prompt": "Image 1 is the first frame. He is alone in the frame. His eyes drop to a phone screen held out just below the frame, then come back up toward the customer off-screen to the left; his mouth stays level, he presses his lower lip together briefly, then speaks. Camera: static. Clerk (calm), in a steady, low, unhurried voice of a man in his early thirties who never raises it, says: \"Sorry. We have no cars.\" Only Clerk speaks. Sound: the rental hall murmur. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:42-0800"
+    },
+    "final/e1s01": {
+      "file": "clips/final/e1s01.mp4",
+      "attempt": 0,
+      "seed": 339745,
+      "prompt": "Image 1 is the first frame. Traveler holds her phone out across the counter toward Clerk, the screen showing CONFIRMED, in one continuous move. Camera: slow push-in. No one speaks. Sound: the low murmur of the airport rental hall, a distant PA announcement echoing. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:42-0800"
+    },
+    "final/e1s02": {
+      "file": "clips/final/e1s02.mp4",
+      "attempt": 0,
+      "seed": 268347,
+      "prompt": "Image 1 is the first frame. Her wrist pushes the phone forward first, then her chin lifts, her eyes locked on Clerk. Camera: static. Traveler (impatient, fast), in a clear voice of a woman in her mid-twenties, slightly husky after a long flight, says: \"I booked this two weeks ago!\" Only Traveler speaks. Sound: the rental hall murmur. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:42-0800"
+    },
+    "final/e1s05": {
+      "file": "clips/final/e1s05.mp4",
+      "attempt": 0,
+      "seed": 824900,
+      "prompt": "Image 1 is the first frame. Image 2 is the last frame; end exactly on it. Clerk's hand turns the monitor toward Traveler on the left; the large number on the screen drops from 3 to 0, in one smooth move. Camera: static. No one speaks. Sound: the soft creak of the monitor stand turning. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:47-0800"
+    },
+    "final/e1s06": {
+      "file": "clips/final/e1s06.mp4",
+      "attempt": 0,
+      "seed": 165014,
+      "prompt": "Image 1 is the first frame. Her eyes lift from the monitor back to Clerk's face; her hand tightens around the phone at the counter edge first, then her upper body leans forward. Camera: static. Traveler (pressing, fast), in a clear voice of a woman in her mid-twenties, slightly husky after a long flight, says: \"Then upgrade me, or downgrade me to whatever car you have.\" Only Traveler speaks. Sound: the rental hall murmur. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:47-0800"
+    },
+    "final/e1s07": {
+      "file": "clips/final/e1s07.mp4",
+      "attempt": 0,
+      "seed": 980537,
+      "prompt": "Image 1 is the first frame. He turns the monitor back to its original position, returns both hands to the counter, and gives one small nod of the chin on the word may; his tone stays level. Camera: static. Clerk (level, careful), in a steady, low, unhurried voice of a man in his early thirties who never raises it, says: \"I'm sorry, neither is possible. They're all gone. If you wait two hours, you may get compensation.\" Only Clerk speaks. Sound: the rental hall murmur, the monitor stand turning. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:49-0800"
+    },
+    "final/e1s04": {
+      "file": "clips/final/e1s04.mp4",
+      "attempt": 0,
+      "seed": 99290,
+      "prompt": "Image 1 is the first frame. Her hand hangs in mid-air, then lowers a beat behind her gaze to rest on the counter edge; short quick breaths, her brow tightens, her eyes flick between Clerk and the H sign wall; the camera slowly pushes in on her face. Camera: slow push-in. An off-screen narrator who never appears, in a crisp, warm voice of a woman in her forties with a hint of a teasing smile, like a clever friend leaning in to explain, says: \"Rental companies plan around expected returns, not a specific car waiting for you. One late return, one car in the shop, one at the wrong branch—and three expected cars become zero.\" No one on screen speaks; every mouth stays closed. Sound: the rental hall murmur, the light tap of the phone on the counter, a soft knock as Clerk's hand settles on the monitor edge. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:51-0800"
+    },
+    "final/e1s10": {
+      "file": "clips/final/e1s10.mp4",
+      "attempt": 0,
+      "seed": 936675,
+      "prompt": "Image 1 is the first frame. Her eyes land on the H badge on the car door first, then her head tilts slightly and one eyebrow rises. Camera: static. Traveler (puzzled, slower), in a clear voice of a woman in her mid-twenties, slightly husky after a long flight, says: \"That's an H car.\" Only Traveler speaks. Sound: curb traffic. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:51-0800"
+    },
+    "final/e1s12": {
+      "file": "clips/final/e1s12.mp4",
+      "attempt": 0,
+      "seed": 91421,
+      "prompt": "Image 1 is the first frame. Her gaze moves from Driver's open hand to the car body, her head tilts and the corner of her mouth lifts with curiosity. Camera: static. Traveler (curious, a little dry), in a clear voice of a woman in her mid-twenties, slightly husky after a long flight, says: \"So what happens when she gets too old?\" Only Traveler speaks. Sound: curb traffic. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:53-0800"
+    },
+    "final/e1s13": {
+      "file": "clips/final/e1s13.mp4",
+      "attempt": 0,
+      "seed": 296351,
+      "prompt": "Image 1 is the first frame. Driver's fingers tap the dashboard twice; the odometer clearly reads 70,000, at normal speed. Camera: static. No one speaks. Sound: two light taps on the dashboard. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:56-0800"
+    },
+    "final/e1s11": {
+      "file": "clips/final/e1s11.mp4",
+      "attempt": 0,
+      "seed": 222699,
+      "prompt": "Image 1 is the first frame. Driver smiles first, then pats the H badge on the door twice with his palm and opens his hand on the word nothing; Traveler's eyes follow his hand. Camera: static. Driver (easy, leaning out the window), in a warm, relaxed baritone that talks about the car like an old colleague and calls her she, says: \"I rent this car from H through their rideshare driver program. A car sitting in the lot earns them nothing.\" Only Driver speaks. Sound: curb traffic, the electric hum of the window, two dull pats on the car door. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:57-0800"
+    },
+    "final/e1s14": {
+      "file": "clips/final/e1s14.mp4",
+      "attempt": 0,
+      "seed": 483482,
+      "prompt": "Image 1 is the first frame. He looks out of the window at Traveler, his smile lines deepen first, then he speaks as if praising an old colleague. Camera: static. Driver (warm, proud), in a warm, relaxed baritone that talks about the car like an old colleague and calls her she, says: \"She had two hundred miles when I got her. Soon H sells her, while she's still worth something.\" Only Driver speaks. Sound: curb traffic. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:58-0800"
+    },
+    "final/e1s16": {
+      "file": "clips/final/e1s16.mp4",
+      "attempt": 0,
+      "seed": 950565,
+      "prompt": "Image 1 is the first frame. Traveler lifts the teal suitcase and sets it into the open trunk in one smooth motion. Camera: static. No one speaks. Sound: the trunk lid popping, the dull thud of the suitcase landing in the trunk. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:45:59-0800"
+    },
+    "final/e1s17": {
+      "file": "clips/final/e1s17.mp4",
+      "attempt": 0,
+      "seed": 99873,
+      "prompt": "Image 1 is the first frame. She presses the trunk lid closed, walks to the rear door, opens it and gets into the back seat, at normal speed. Camera: static. No one speaks. Sound: the trunk closing, the rear door opening and shutting. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:46:01-0800"
+    },
+    "final/e1s18": {
+      "file": "clips/final/e1s18.mp4",
+      "attempt": 0,
+      "seed": 470571,
+      "prompt": "Image 1 is the first frame. The yellow sedan drives away down the road toward the low sun. Camera: static. No one speaks. Sound: tires on asphalt, waves and sea wind. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:46:03-0800"
+    },
+    "final/e1s19": {
+      "file": "clips/final/e1s19.mp4",
+      "attempt": 0,
+      "seed": 616610,
+      "prompt": "Image 1 is the first frame. Traveler's shoulders relax and her breathing slows; Driver glances up at her in the rear-view mirror, the corner of his mouth rises, one hand still on the wheel. Camera: static. Driver (light, cheerful), in a warm, relaxed baritone that talks about the car like an old colleague and calls her she, says: \"Safe travels!\" Only Driver speaks. Sound: a steady tire hum, quiet air conditioning. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:46:06-0800"
+    },
+    "final/e1s20": {
+      "file": "clips/final/e1s20.mp4",
+      "attempt": 0,
+      "seed": 929855,
+      "prompt": "Image 1 is the first frame. The yellow sedan drives on toward the low apricot sun, growing smaller; waves roll beyond the guardrail and the grass sways in the wind; the camera slowly pushes in. Camera: slow push-in. An off-screen narrator who never appears, in a crisp, warm voice of a woman in her forties with a hint of a teasing smile, like a clever friend leaning in to explain, says: \"Next time, add your flight number so the rental desk can track delays. Check the pickup terms, and keep a backup ride in mind.\" No one on screen speaks; every mouth stays closed. Sound: waves and sea wind, a distant tire hum. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Only the people already in Image 1 appear; no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T21:46:10-0800"
     }
   }
 }

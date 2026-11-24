@@ -8,6 +8,8 @@ Everything the pipeline generated for this episode, added step by step as each s
 | `refs/` | 1 | FLUX 3 Image Klein | character turnarounds, prop three-views, empty location plates / 人物设定图、道具三视图、场景空镜 |
 | `keyframes/` | 2 | FLUX 3 Klein Edit | each shot's first frame, and `-last` frames where a shot must end exactly / 每个镜头的首帧，需要精确收尾的镜头另有 `-last` 末帧 |
 | `clips/` | 3 onward / 第 3 步起 | MiniMax H3 Fast | clips with speech and sound, by pass (`draft` is 480p Radical Value) / 带台词和声音的片段，按草稿、终稿分目录 |
+| `clips/final/` | 4 | MiniMax H3 Fast | the 21 final clips, 768p on Radical Speed | |
+| `film/` | 4 | ffmpeg | the assembled film and its subtitles | |
 
 - `name.a0.jpg`, `name.a1.jpg`: earlier attempts that a re-roll replaced, kept for comparison. Why each was
   replaced is in [notes/](../../notes/README.md).

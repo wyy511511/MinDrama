@@ -1,0 +1,80 @@
+1
+00:00:07,330 --> 00:00:11,288
+I booked this two weeks ago!
+
+2
+00:00:11,810 --> 00:00:12,890
+Sorry.
+
+3
+00:00:12,890 --> 00:00:15,768
+We have no cars.
+
+4
+00:00:16,290 --> 00:00:22,288
+Rental companies plan around expected returns, not a specific car waiting for you.
+
+5
+00:00:22,288 --> 00:00:29,457
+One late return, one car in the shop, one at the wrong branch—and three expected cars become zero.
+
+6
+00:00:34,466 --> 00:00:39,133
+Then upgrade me, or downgrade me to whatever car you have.
+
+7
+00:00:39,650 --> 00:00:41,843
+I'm sorry, neither is possible.
+
+8
+00:00:41,843 --> 00:00:43,046
+They're all gone.
+
+9
+00:00:43,046 --> 00:00:46,442
+If you wait two hours, you may get compensation.
+
+10
+00:01:01,090 --> 00:01:05,048
+That's an H car.
+
+11
+00:01:05,570 --> 00:01:10,785
+I rent this car from H through their rideshare driver program.
+
+12
+00:01:10,785 --> 00:01:14,487
+A car sitting in the lot earns them nothing.
+
+13
+00:01:15,010 --> 00:01:18,968
+So what happens when she gets too old?
+
+14
+00:01:19,490 --> 00:01:22,796
+She had two hundred miles when I got her.
+
+15
+00:01:22,796 --> 00:01:26,990
+Soon H sells her, while she's still worth something.
+
+16
+00:01:31,970 --> 00:01:32,827
+Oh, true.
+
+17
+00:01:32,827 --> 00:01:36,637
+H sells lots of its cars on H Car Sales.
+
+18
+00:01:52,706 --> 00:01:58,789
+Safe travels!
+
+19
+00:01:59,298 --> 00:02:05,481
+Next time, add your flight number so the rental desk can track delays.
+
+20
+00:02:05,481 --> 00:02:10,340
+Check the pickup terms, and keep a backup ride in mind.
+
