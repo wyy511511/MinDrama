@@ -587,8 +587,10 @@ def clip_prompt(story: dict, shot: dict, has_last: bool) -> str:
              shot["action"].rstrip(".") + ".", f"Camera: {shot['camera']}.", speech(story, shot)]
     if shot.get("sound"):
         parts.append(f"Sound: {shot['sound']}.")
-    parts.append(f"{story['clip_audio']} Normal speed, no slow motion. Keep every face, hairstyle and outfit exactly "
-                 f"as in Image 1. No captions or subtitles.")
+    # H3 draws whoever the action mentions: "her phone" put an unknown woman into the Clerk's close-up (e1s03, draft)
+    parts.append(f"{story['clip_audio']} Normal speed, no slow motion. Only the people already in Image 1 appear; "
+                 f"no one else enters the frame. Keep every face, hairstyle and outfit exactly as in Image 1. "
+                 f"No captions or subtitles.")
     return " ".join(parts)
 
 
@@ -1163,8 +1165,8 @@ def main(argv=None) -> int:
             failed = film.keyframes(ids, redo_shots)
         elif a.command == "voices":
             vids = [i for i in film.voice_shots() if not a.shots or i in ids]
-            log(f"voices: {', '.join(vids)} (draft clips; listen in review.html)")
-            failed = film.keyframes(vids, False) or film.clips("draft", vids, redo_shots)
+            log(f"voices: {', '.join(vids)} ({a.pass_} clips; listen in review.html)")
+            failed = film.keyframes(vids, False) or film.clips(a.pass_, vids, redo_shots)
             log(f"open {review_page(story, man)}")
         elif a.command == "clips":
             failed = film.clips(a.pass_, ids, redo_shots)

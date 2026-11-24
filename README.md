@@ -67,6 +67,7 @@ price-list estimate until clips have been rendered.
 |---|---:|
 | 9 reference sheets, 13 generations with re-rolls | $0.022 measured |
 | 20 first frames and 2 last frames, 27 generations with re-rolls | $0.58 measured |
+| 4 voice clips, draft (480p, Radical Value), 30 s | $0.31 measured |
 | Clips, draft (480p, Radical Value) | $2.02 estimated |
 | Clips, final (768p, Radical Speed) | $3.36 estimated |
 

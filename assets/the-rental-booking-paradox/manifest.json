@@ -266,5 +266,39 @@
       "earlier_attempts": [],
       "made": "2026-11-23T20:26:57-0800"
     }
+  },
+  "clips": {
+    "draft/e1s03": {
+      "file": "clips/draft/e1s03.mp4",
+      "attempt": 0,
+      "seed": 587010,
+      "prompt": "Image 1 is the first frame. His eyes move from her phone screen back to her face; his mouth stays level, he presses his lower lip together briefly, then speaks. Camera: static. Clerk (calm), in a steady, low, unhurried voice of a man in his early thirties who never raises it, says: \"Sorry. We have no cars.\" Only Clerk speaks. Sound: the rental hall murmur. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T20:51:29-0800"
+    },
+    "draft/e1s02": {
+      "file": "clips/draft/e1s02.mp4",
+      "attempt": 0,
+      "seed": 268347,
+      "prompt": "Image 1 is the first frame. Her wrist pushes the phone forward first, then her chin lifts, her eyes locked on Clerk. Camera: static. Traveler (impatient, fast), in a clear voice of a woman in her mid-twenties, slightly husky after a long flight, says: \"I booked this two weeks ago!\" Only Traveler speaks. Sound: the rental hall murmur. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T20:51:29-0800"
+    },
+    "draft/e1s11": {
+      "file": "clips/draft/e1s11.mp4",
+      "attempt": 0,
+      "seed": 222699,
+      "prompt": "Image 1 is the first frame. Driver smiles first, then pats the H badge on the door twice with his palm and opens his hand on the word nothing; Traveler's eyes follow his hand. Camera: static. Driver (easy, leaning out the window), in a warm, relaxed baritone that talks about the car like an old colleague and calls her she, says: \"I rent this car from H through their rideshare driver program. A car sitting in the lot earns them nothing.\" Only Driver speaks. Sound: curb traffic, the electric hum of the window, two dull pats on the car door. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T20:51:55-0800"
+    },
+    "draft/e1s04": {
+      "file": "clips/draft/e1s04.mp4",
+      "attempt": 0,
+      "seed": 99290,
+      "prompt": "Image 1 is the first frame. Her hand hangs in mid-air, then lowers a beat behind her gaze to rest on the counter edge; short quick breaths, her brow tightens, her eyes flick between Clerk and the H sign wall; the camera slowly pushes in on her face. Camera: slow push-in. An off-screen narrator who never appears, in a crisp, warm voice of a woman in her forties with a hint of a teasing smile, like a clever friend leaning in to explain, says: \"Rental companies plan around expected returns, not a specific car waiting for you. One late return, one car in the shop, one at the wrong branch—and three expected cars become zero.\" No one on screen speaks; every mouth stays closed. Sound: the rental hall murmur, the light tap of the phone on the counter, a soft knock as Clerk's hand settles on the monitor edge. No background music or score: only ambient sound, action sounds and voices. Normal speed, no slow motion. Keep every face, hairstyle and outfit exactly as in Image 1. No captions or subtitles.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T20:52:20-0800"
+    }
   }
 }
