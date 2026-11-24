@@ -1,0 +1,83 @@
+{
+  "refs": {
+    "character:traveler": {
+      "file": "refs/character-traveler.jpg",
+      "attempt": 1,
+      "seed": 584263,
+      "prompt": "Character turnaround sheet of one person on a seamless plain light-grey (#DCDCDC) background, landscape layout: a large head close-up facing the camera on the left; full-body front, side and back views in the middle; a row of three head close-ups along the bottom (front, three-quarter, profile) with a neutral expression. The same single person in every view, identical proportions, outfit and hair; feet fully visible; even diffuse light, no shadows. Traveler: Woman, mid-twenties (she looks about 25, with a youthful face), mixed-heritage American, about 165 cm, slim light athletic build. Oval face with a softly pointed chin, high rounded cheekbones, almond eyes set slightly wide, straight nose with a small rounded tip, full lower lip, straight medium-thick brows. Dark brown-black straight shoulder-length bob, deep side part on the left, front strands tucked behind the right ear. Dark brown eyes. Warm tan skin, a small mole under the left eye; light natural makeup, natural lip color. No glasses, no bangs, no earrings, no jewelry, no tattoos, no hat. Outfit: a coral-orange lightweight hip-length zip jacket with two side slit pockets, worn open over a plain cream crew-neck T-shirt; dark navy straight-leg trousers; dark charcoal low sneakers. Posture upright and relaxed, one hand lightly in a jacket side pocket with the thumb out, the other hand relaxed at the side. Photoreal live-action: real skin and fabric texture. No text, no logos, no jewelry or accessories beyond the description.",
+      "earlier_attempts": [
+        "refs/character-traveler.a0.jpg"
+      ],
+      "made": "2026-11-23T20:19:34-0800"
+    },
+    "prop:sedan": {
+      "file": "refs/prop-sedan.jpg",
+      "attempt": 2,
+      "seed": 992689,
+      "prompt": "Three-view reference sheet of one object on a seamless plain light-grey (#DCDCDC) background, three panels side by side: front, back, and a 45-degree three-quarter view; the same single object in every panel with identical details; even soft light, no shadows; no people, no hands. A contemporary compact four-door sedan with a low roofline, not an SUV. Warm golden-yellow paint; the roof is sun-faded to a noticeably paler, chalky yellow, clearly visible in the three-quarter view. The same three-box four-door sedan body with a separate trunk in all three panels, never a hatchback. A smooth plain front grille and a plain trunk lid with no emblem, badge or lettering. Blue-grey tinted windows, dark grey alloy wheels, clear headlights, coral-red taillights, blank license plates with no characters, no roof rack, no taxi sign. Photoreal product photography. The only markings: one small square H badge (a yellow square with a dark capital H) on the driver-side front door, and nothing else.",
+      "earlier_attempts": [
+        "refs/prop-sedan.a0.jpg",
+        "refs/prop-sedan.a1.jpg"
+      ],
+      "made": "2026-11-23T20:20:04-0800"
+    },
+    "character:driver": {
+      "file": "refs/character-driver.jpg",
+      "attempt": 0,
+      "seed": 940489,
+      "prompt": "Character turnaround sheet of one person on a seamless plain light-grey (#DCDCDC) background, landscape layout: a large head close-up facing the camera on the left; full-body front, side and back views in the middle; a row of three head close-ups along the bottom (front, three-quarter, profile) with a neutral expression. The same single person in every view, identical proportions, outfit and hair; feet fully visible; even diffuse light, no shadows. Driver: Man, late forties, Latino American, about 178 cm, solid broad-shouldered build with a slight belly. Round-square face with full cheeks, deep smile lines, heavy-lidded wide-set eyes, broad nose, thick dark brows, neatly trimmed salt-and-pepper mustache. Black hair with grey at the temples, short, combed back. Dark brown eyes. Medium brown sun-weathered skin. No glasses, no sunglasses, no full beard, no earrings, no tattoos, no hat. Outfit: a light blue short-sleeve chambray button shirt, untucked, loose sleeves; dark wash straight jeans with front pockets; tan work sneakers. Posture upright and relaxed, one hand lightly in a front jeans pocket with the thumb out, the other hand relaxed at the side. Photoreal live-action: real skin and fabric texture. No text, no logos, no jewelry or accessories beyond the description.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T20:17:02-0800"
+    },
+    "character:clerk": {
+      "file": "refs/character-clerk.jpg",
+      "attempt": 0,
+      "seed": 14980,
+      "prompt": "Character turnaround sheet of one person on a seamless plain light-grey (#DCDCDC) background, landscape layout: a large head close-up facing the camera on the left; full-body front, side and back views in the middle; a row of three head close-ups along the bottom (front, three-quarter, profile) with a neutral expression. The same single person in every view, identical proportions, outfit and hair; feet fully visible; even diffuse light, no shadows. Clerk: Man, early thirties, East Asian American, about 175 cm, lean average build. Rectangular face with a flat defined jaw, broad forehead, narrow monolid eyes, low straight brows, medium nose with a wide bridge, thin lips. Black short hair, neatly combed side part on the right, tidy tapered sides. Dark brown eyes. Light olive skin, clean-shaven. No glasses, no beard, no earrings, no tattoos, no hat. Outfit: a fitted dark navy blazer over a white button-up shirt with a plain dark navy tie, a small yellow square pin with a dark capital H on the left lapel; charcoal slacks; black leather shoes. Posture upright and relaxed, one hand lightly pinching the opposite blazer cuff, the other hand relaxed at the side. Photoreal live-action: real skin and fabric texture. No text, no logos, no jewelry or accessories beyond the description.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T20:17:02-0800"
+    },
+    "prop:phone": {
+      "file": "refs/prop-phone.jpg",
+      "attempt": 0,
+      "seed": 755933,
+      "prompt": "Three-view reference sheet of one object on a seamless plain light-grey (#DCDCDC) background, three panels side by side: front, back, and a 45-degree three-quarter view; the same single object in every panel with identical details; even soft light, no shadows; no people, no hands. A contemporary slim slab smartphone. Front: the whole screen is off and blank, thin black bezel, no icons. Back: matte graphite-black body with a single camera bump in the top-left corner, no logo or text. A soft silver metal frame, one side button on the right edge, no case. Photoreal product photography. No text or logos.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T20:17:02-0800"
+    },
+    "prop:suitcase": {
+      "file": "refs/prop-suitcase.jpg",
+      "attempt": 0,
+      "seed": 877499,
+      "prompt": "Three-view reference sheet of one object on a seamless plain light-grey (#DCDCDC) background, three panels side by side: front, back, and a 45-degree three-quarter view; the same single object in every panel with identical details; even soft light, no shadows; no people, no hands. A medium teal hard-shell rolling suitcase with vertical ridges, a black telescoping handle and four black spinner wheels, no logo or text. Photoreal product photography. No text or logos.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T20:17:02-0800"
+    },
+    "location:curb": {
+      "file": "refs/location-curb.jpg",
+      "attempt": 1,
+      "seed": 379111,
+      "prompt": "Empty establishing shot with no people: The arrivals-level pickup curb of a 2020s Los Angeles airport: a wide light concrete sidewalk with the rental center's glass entrance doors behind, with no signs or lettering above them; on the left a row of three tall palm trees in square concrete planters along the curb; on the right two square grey concrete columns holding up the elevated roadway above, shading the right half; in the foreground an empty asphalt pickup lane with white curb markings; no traffic cones, no luggage, no other vehicles. Afternoon: hard warm-white California sun from the upper left, crisp palm shadows on the sidewalk, cooler blue shade under the elevated road on the right. Photoreal live-action film frame, contemporary Los Angeles, intimate observational realism, soft natural mixed light, muted warm-neutral palette (warm beige and cream, muted olive and dusty navy accents, soft charcoal shadows), subtle fine film texture, natural skin texture, believable exposure. Photoreal live action, not animation, illustration, CGI or a 3D render. No captions, subtitles or watermarks; no real brand logos; no extra people; natural hands and anatomy.",
+      "earlier_attempts": [
+        "refs/location-curb.a0.jpg"
+      ],
+      "made": "2026-11-23T20:19:34-0800"
+    },
+    "location:highway": {
+      "file": "refs/location-highway.jpg",
+      "attempt": 0,
+      "seed": 778623,
+      "prompt": "Empty establishing shot with no people: A two-lane Southern California coastal highway: dark asphalt with a double yellow center line curving gently toward the horizon; the Pacific Ocean and a white metal guardrail on the left; dry golden grass slopes and low coastal bluffs on the right; no other cars, no road signs, no billboards, no buildings. Sunset: a low apricot sun just above the sea straight ahead, soft backlight along the road, pale grey-green shadows; soft, never a harsh golden glare. Photoreal live-action film frame, contemporary Los Angeles, intimate observational realism, soft natural mixed light, muted warm-neutral palette (warm beige and cream, muted olive and dusty navy accents, soft charcoal shadows), subtle fine film texture, natural skin texture, believable exposure. Photoreal live action, not animation, illustration, CGI or a 3D render. No captions, subtitles or watermarks; no real brand logos; no extra people; natural hands and anatomy.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T20:17:03-0800"
+    },
+    "location:counter": {
+      "file": "refs/location-counter.jpg",
+      "attempt": 0,
+      "seed": 748237,
+      "prompt": "Empty establishing shot with no people: The H rental area of a 2020s Los Angeles airport rental center: a long glossy bright-yellow service counter across the middle of the frame; on the wall behind it one large H sign (a yellow square with a dark capital H), the only logo; a black thin-bezel flat monitor at the right end of the counter with a blank screen; a chrome queue stanchion with a navy belt at the front left; a floor-to-ceiling glass wall on the right letting in bright California daylight; a light grey polished floor. Only these fixtures: no other furniture, seats, posters or luggage carts. Daytime: bright warm-white daylight slants in from the glass wall on the right, cool white ceiling light fills in, soft reflections on the floor. Photoreal live-action film frame, contemporary Los Angeles, intimate observational realism, soft natural mixed light, muted warm-neutral palette (warm beige and cream, muted olive and dusty navy accents, soft charcoal shadows), subtle fine film texture, natural skin texture, believable exposure. Photoreal live action, not animation, illustration, CGI or a 3D render. No captions, subtitles or watermarks; no real brand logos; no extra people; natural hands and anatomy.",
+      "earlier_attempts": [],
+      "made": "2026-11-23T20:18:18-0800"
+    }
+  }
+}
